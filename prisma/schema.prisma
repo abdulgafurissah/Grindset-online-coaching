@@ -1,0 +1,219 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  ADMIN
+  COACH
+  CLIENT
+}
+
+model User {
+  id            String    @id @default(cuid())
+  name          String?
+  email         String    @unique
+  emailVerified DateTime?
+  image         String?
+  password      String?
+  role          Role      @default(CLIENT)
+  accounts      Account[]
+  sessions      Session[]
+  profile       Profile?
+  
+  // Relations
+  programs      Program[] // Created programs
+  assignedPrograms Program[] @relation("AssignedPrograms")
+  assignments   Assignment[]
+  progress      ProgressLog[]
+  
+  // Create Coach-Client Relation
+  coachId       String?
+  coach         User?     @relation("CoachClients", fields: [coachId], references: [id])
+  clients       User[]    @relation("CoachClients")
+
+  // Admin fields
+  isActive      Boolean   @default(true)
+  
+  // Messaging
+  sentMessages     Message[] @relation("SentMessages")
+  receivedMessages Message[] @relation("ReceivedMessages")
+  
+  // Subscriptions
+  subscription  Subscription?
+
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  // Nutrition & Hydration
+  nutritionLogs NutritionLog[]
+  hydrationLogs HydrationLog[]
+}
+
+model NutritionLog {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  name      String
+  calories  Int
+  protein   Int
+  carbs     Int
+  fats      Int
+  createdAt DateTime @default(now())
+
+  @@index([userId])
+}
+
+model HydrationLog {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  amount    Int      // in ml
+  createdAt DateTime @default(now())
+
+  @@index([userId])
+}
+
+model Profile {
+  id     String @id @default(cuid())
+  bio    String?
+  age    Int?
+  height Float?
+  weight Float?
+  goals  String?
+  userId String @unique
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model Account {
+  id                 String  @id @default(cuid())
+  userId             String
+  type               String
+  provider           String
+  providerAccountId  String
+  refresh_token      String?
+  access_token       String?
+  expires_at         Int?
+  token_type         String?
+  scope              String?
+  id_token           String?
+  session_state      String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model Program {
+  id          String   @id @default(cuid())
+  title       String
+  description String?
+  creatorId   String
+  creator     User     @relation(fields: [creatorId], references: [id])
+  workouts    Workout[]
+  
+  // Assignments could be complex, simplifying for now
+  assignedTo  User[]   @relation("AssignedPrograms") // M-N relation? Or Assignment model?
+  // Let's assume M-N for now implicitly managed by Prisma or explicit:
+  // Usually explicit is better:
+  assignments Assignment[]
+
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model Assignment {
+  id        String   @id @default(cuid())
+  programId String
+  userId    String
+  program   Program  @relation(fields: [programId], references: [id])
+  user      User     @relation(fields: [userId], references: [id])
+  startDate DateTime @default(now())
+  status    String   // ACTIVE, COMPLETED
+}
+
+model Workout {
+  id          String   @id @default(cuid())
+  title       String
+  description String?
+  programId   String
+  program     Program  @relation(fields: [programId], references: [id], onDelete: Cascade)
+  exercises   WorkoutExercise[]
+  order       Int      @default(0)
+}
+
+model Exercise {
+  id          String   @id @default(cuid())
+  name        String   @unique
+  description String?
+  videoUrl    String?
+  muscleGroup String?
+  workouts    WorkoutExercise[]
+}
+
+model WorkoutExercise {
+  id          String   @id @default(cuid())
+  workoutId   String
+  workout     Workout  @relation(fields: [workoutId], references: [id], onDelete: Cascade)
+  exerciseId  String
+  exercise    Exercise @relation(fields: [exerciseId], references: [id])
+  sets        Int?
+  reps        String?
+  rest        Int?     // seconds
+  order       Int      @default(0)
+
+  @@index([workoutId])
+  @@index([exerciseId])
+}
+
+model ProgressLog {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  date      DateTime @default(now())
+  metrics   Json?    // weight, reps, etc.
+  photos    String[] // R2 urls
+}
+
+model Message {
+  id        String   @id @default(cuid())
+  content   String
+  senderId  String
+  sender    User     @relation("SentMessages", fields: [senderId], references: [id], onDelete: Cascade)
+  receiverId String
+  receiver  User     @relation("ReceivedMessages", fields: [receiverId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+  read      Boolean  @default(false)
+}
+
+model Subscription {
+  id            String   @id @default(cuid())
+  userId        String   @unique
+  user          User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  stripeId      String   @unique
+  status        String
+  priceId       String
+  currentPeriodEnd DateTime
+}
+
+model Application {
+  id        String   @id @default(cuid())
+  name      String
+  email     String
+  type      String   // CLIENT, COACH
+  status    String   @default("PENDING") // PENDING, APPROVED, REJECTED
+  details   Json?    // e.g., experience, goals
+  createdAt DateTime @default(now())
+}
