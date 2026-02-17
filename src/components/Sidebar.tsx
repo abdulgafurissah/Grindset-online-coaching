@@ -14,7 +14,9 @@ import {
     Settings,
     LogOut,
     Users,
-    ShieldCheck
+    ShieldCheck,
+    X,
+    Menu
 } from "lucide-react";
 
 const commonLinks = [
@@ -39,7 +41,12 @@ const adminLinks = [
     { href: "/dashboard/clients", label: "All Users", icon: Users },
 ];
 
-export function Sidebar() {
+interface SidebarProps {
+    className?: string;
+    onClose?: () => void;
+}
+
+export function Sidebar({ className, onClose }: SidebarProps) {
     const pathname = usePathname();
     const { data: session } = useSession();
 
@@ -57,14 +64,24 @@ export function Sidebar() {
     }
 
     return (
-        <aside className="fixed left-0 top-0 z-40 h-screen w-64 border-r border-white/10 bg-black-rich flex flex-col">
-            <div className="p-6">
-                <Link href="/dashboard" className="flex items-center gap-2 mb-8">
-                    <div className="relative h-10 w-10">
+        <aside
+            className={cn(
+                "fixed left-0 top-0 z-40 h-screen w-64 border-r border-white/10 bg-black-rich flex flex-col transition-transform duration-300 ease-in-out md:translate-x-0",
+                className
+            )}
+        >
+            <div className="p-6 flex items-center justify-between">
+                <Link href="/dashboard" className="flex items-center gap-2" onClick={onClose}>
+                    <div className="relative h-8 w-8 md:h-10 md:w-10">
                         <Image src="/logo.svg" alt="Grindset Logo" fill className="object-contain" />
                     </div>
-                    <span className="text-xl font-bold text-white tracking-widest">GRINDSET</span>
+                    <span className="text-lg md:text-xl font-bold text-white tracking-widest">GRINDSET</span>
                 </Link>
+                {onClose && (
+                    <button onClick={onClose} className="md:hidden text-white/70 hover:text-white">
+                        <X className="h-6 w-6" />
+                    </button>
+                )}
             </div>
 
             <div className="flex-1 overflow-y-auto py-6 px-3">

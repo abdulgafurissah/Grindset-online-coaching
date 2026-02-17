@@ -1,4 +1,6 @@
-import { Sidebar } from "@/components/Sidebar";
+
+import DashboardLayoutClient from "@/components/DashboardLayoutClient";
+
 export const dynamic = "force-dynamic";
 
 export default function DashboardLayout({
@@ -6,12 +8,5 @@ export default function DashboardLayout({
 }: {
     children: React.ReactNode;
 }) {
-    return (
-        <div className="min-h-screen bg-black-rich text-white">
-            <Sidebar />
-            <main className="pl-64">
-                {children}
-            </main>
-        </div>
-    );
+    return <DashboardLayoutClient>{children}</DashboardLayoutClient>;
 }
