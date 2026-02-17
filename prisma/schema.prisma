@@ -202,10 +202,10 @@ model Subscription {
   id            String   @id @default(cuid())
   userId        String   @unique
   user          User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  stripeId      String   @unique
-  status        String
-  priceId       String
-  currentPeriodEnd DateTime
+  paypalSubscriptionId String   @unique
+  status               String
+  planId               String
+  currentPeriodEnd     DateTime
 }
 
 model Application {

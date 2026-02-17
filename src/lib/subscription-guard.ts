@@ -1,5 +1,5 @@
 import { auth } from "@/auth";
-import { getSubscriptionStatus } from "@/app/actions/stripe";
+import prisma from "@/lib/prisma";
 import { redirect } from "next/navigation";
 
 export async function requireSubscription() {
@@ -10,8 +10,12 @@ export async function requireSubscription() {
     const role = (session.user as any).role;
     if (role === "ADMIN" || role === "COACH") return;
 
-    const sub = await getSubscriptionStatus();
-    if (!sub?.isValid) {
+    // Check DB subscription
+    const subscription = await prisma.subscription.findUnique({
+        where: { userId: session.user.id }
+    });
+
+    if (!subscription || subscription.status !== "ACTIVE" || subscription.currentPeriodEnd < new Date()) {
         redirect("/dashboard/billing");
     }
 }

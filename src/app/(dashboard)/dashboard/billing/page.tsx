@@ -1,41 +1,23 @@
-import { auth } from "@/auth";
-import { getSubscriptionStatus, createCheckoutSession, createCustomerPortal } from "@/app/actions/stripe";
-import { Check, CreditCard, Shield } from "lucide-react";
-import { Button } from "@/components/ui/button";
 
-export default async function BillingPage({
-    searchParams,
-}: {
-    searchParams: { [key: string]: string | string[] | undefined };
-}) {
+import { auth } from "@/auth";
+import { getSubscriptionStatus } from "@/app/actions/payment";
+import { Check, Shield } from "lucide-react";
+import { PayPalSubscription } from "@/components/PayPalSubscription";
+import { Button, buttonVariants } from "@/components/ui/button";
+
+export default async function BillingPage() {
     const session = await auth();
     const subscription = await getSubscriptionStatus();
 
-    // Check for success/canceled query params
-    const isSuccess = searchParams.success === "true";
-    const isCanceled = searchParams.canceled === "true";
+    // PayPal Plan ID - In real production app, this should be in env or database
+    // For sandbox testing, use a plan ID created in your developer dashboard.
+    // e.g., P-SANDBOX-123456789
+    const PLAN_ID = process.env.PAYPAL_PLAN_ID || "P-SANDBOX-DEFAULT";
 
     return (
         <div className="p-8 max-w-5xl mx-auto">
             <h1 className="text-3xl font-bold text-white mb-2 uppercase tracking-tight">Billing & Subscription</h1>
             <p className="text-white/60 mb-8">Manage your plan and payment details.</p>
-
-            {isSuccess && (
-                <div className="mb-8 p-4 bg-green-500/10 border border-green-500/20 rounded-xl text-green-400 flex items-center gap-3">
-                    <Check className="h-5 w-5" />
-                    <div>
-                        <p className="font-bold">Subscription Successful!</p>
-                        <p className="text-sm opacity-80">Thank you for joining Grindset Online Coaching.</p>
-                    </div>
-                </div>
-            )}
-
-            {isCanceled && (
-                <div className="mb-8 p-4 bg-red-500/10 border border-red-500/20 rounded-xl text-red-400">
-                    <p className="font-bold">Payment Canceled</p>
-                    <p className="text-sm opacity-80">You have not been charged.</p>
-                </div>
-            )}
 
             <div className="grid md:grid-cols-2 gap-8">
                 {/* Status Card */}
@@ -49,36 +31,36 @@ export default async function BillingPage({
                             <div className="flex justify-between items-center py-2 border-b border-white/5">
                                 <span className="text-white/60">Plan</span>
                                 <span className="font-bold text-white">
-                                    {subscription ? "Premium Coaching" : "Free / Inactive"}
+                                    {subscription.isValid ? "Premium Coaching" : "Free / Inactive"}
                                 </span>
                             </div>
                             <div className="flex justify-between items-center py-2 border-b border-white/5">
                                 <span className="text-white/60">Status</span>
-                                <span className={`font-bold px-2 py-0.5 rounded text-xs uppercase ${subscription?.isValid
-                                        ? "bg-green-500/10 text-green-500"
-                                        : "bg-white/10 text-white/40"
+                                <span className={`font-bold px-2 py-0.5 rounded text-xs uppercase ${subscription.isValid
+                                    ? "bg-green-500/10 text-green-500"
+                                    : "bg-white/10 text-white/40"
                                     }`}>
-                                    {subscription?.status || "Inactive"}
+                                    {subscription.isValid ? "Active" : "Inactive"}
                                 </span>
                             </div>
-                            {subscription?.currentPeriodEnd && (
-                                <div className="flex justify-between items-center py-2 border-b border-white/5">
-                                    <span className="text-white/60">Renews On</span>
-                                    <span className="text-white">
-                                        {new Date(subscription.currentPeriodEnd).toLocaleDateString()}
-                                    </span>
-                                </div>
-                            )}
                         </div>
                     </div>
 
                     <div className="mt-8">
-                        {subscription?.isValid ? (
-                            <form action={createCustomerPortal}>
-                                <Button className="w-full bg-white/10 hover:bg-white/20 text-white border border-white/10">
-                                    Manage Subscription
-                                </Button>
-                            </form>
+                        {subscription.isValid ? (
+                            <div className="text-center">
+                                <p className="text-sm text-white/60 mb-4">
+                                    Your subscription is active and managed via PayPal.
+                                </p>
+                                <a
+                                    href="https://www.paypal.com/myaccount/autopay/"
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className={buttonVariants({ className: "w-full bg-white/10 hover:bg-white/20 text-white border border-white/10" })}
+                                >
+                                    Manage on PayPal
+                                </a>
+                            </div>
                         ) : (
                             <p className="text-sm text-white/40 text-center">
                                 Subscribe to access premium features.
@@ -88,7 +70,7 @@ export default async function BillingPage({
                 </div>
 
                 {/* Pricing Card (Show mostly if inactive) */}
-                {!subscription?.isValid && (
+                {!subscription.isValid && (
                     <div className="bg-gradient-to-br from-brand/10 to-black-light border border-brand/20 rounded-xl p-8 relative overflow-hidden">
                         <div className="absolute top-0 right-0 bg-brand text-black-rich text-xs font-bold px-3 py-1 rounded-bl-xl uppercase tracking-wider">
                             Recommended
@@ -117,20 +99,12 @@ export default async function BillingPage({
                             </ul>
                         </div>
 
-                        <form action={createCheckoutSession.bind(null, "price_1QmokPAnXAhCi9OTr6F8vX5v")}>
-                            {/* Replace price_YOUR_PRICE_ID with env var or constant in real app. 
-                                For this MVP, I'll assume we pass it or it's hardcoded for the demo. 
-                                NOTE: User must replace this ID.
-                            */}
-                            <input type="hidden" name="priceId" value={process.env.STRIPE_PRICE_ID || "price_mock"} />
-                            <Button className="w-full bg-brand text-black-rich hover:bg-brand-600 font-bold py-6">
-                                <CreditCard className="h-4 w-4 mr-2" />
-                                Subscribe Now
-                            </Button>
-                        </form>
-                        <p className="text-xs text-white/30 text-center mt-3">
-                            Secure payment via Stripe. Cancel anytime.
-                        </p>
+                        <div className="mt-6">
+                            <PayPalSubscription planId={PLAN_ID} />
+                            <p className="text-xs text-white/30 text-center mt-3">
+                                Secure payment via PayPal. Cancel anytime.
+                            </p>
+                        </div>
                     </div>
                 )}
             </div>
