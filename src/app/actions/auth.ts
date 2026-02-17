@@ -54,7 +54,7 @@ export async function registerUser(formData: FormData) {
         return { success: true };
     } catch (error) {
         console.error("Registration error:", error);
-        return { error: "Failed to create account" };
+        return { error: error instanceof Error ? error.message : "Failed to create account" };
     }
 }
 
