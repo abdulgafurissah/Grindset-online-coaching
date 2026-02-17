@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import { useSession } from "next-auth/react";
+import { useSession, signOut } from "next-auth/react";
 import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
 import {
@@ -92,7 +92,10 @@ export function Sidebar() {
             </div>
 
             <div className="border-t border-white/10 p-4">
-                <button className="flex w-full items-center gap-3 rounded-md px-3 py-2 text-sm font-medium text-white/70 hover:bg-red-500/10 hover:text-red-500 transition-colors">
+                <button
+                    onClick={() => signOut({ callbackUrl: "/" })}
+                    className="flex w-full items-center gap-3 rounded-md px-3 py-2 text-sm font-medium text-white/70 hover:bg-red-500/10 hover:text-red-500 transition-colors"
+                >
                     <LogOut className="h-4 w-4" />
                     Sign Out
                 </button>
