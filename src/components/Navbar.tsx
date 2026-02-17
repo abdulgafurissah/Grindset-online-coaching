@@ -54,6 +54,11 @@ export function Navbar() {
                     <Link href="/pricing" className="text-sm font-medium text-white/80 hover:text-brand transition-colors">
                         Pricing
                     </Link>
+                    {session?.user && (
+                        <Link href="/dashboard" className="text-sm font-medium text-white/80 hover:text-brand transition-colors">
+                            Dashboard
+                        </Link>
+                    )}
                 </div>
 
                 {/* Desktop Auth */}
@@ -69,12 +74,6 @@ export function Navbar() {
                                     <User className="h-4 w-4" />
                                 </div>
                             </div>
-                            <Link
-                                href="/dashboard"
-                                className="text-sm font-medium text-white hover:text-brand transition-colors"
-                            >
-                                Dashboard
-                            </Link>
                             <button
                                 onClick={() => signOut({ callbackUrl: "/" })}
                                 className="bg-white/10 hover:bg-white/20 text-white font-medium py-2 px-4 rounded-none uppercase text-xs tracking-widest transition-all"
