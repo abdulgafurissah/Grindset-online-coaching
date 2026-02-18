@@ -13,6 +13,12 @@ enum Role {
   CLIENT
 }
 
+enum ApprovalStatus {
+  PENDING
+  APPROVED
+  REJECTED
+}
+
 model User {
   id            String    @id @default(cuid())
   name          String?
@@ -21,15 +27,10 @@ model User {
   image         String?
   password      String?
   role          Role      @default(CLIENT)
+  approvalStatus ApprovalStatus @default(PENDING)
   accounts      Account[]
   sessions      Session[]
   profile       Profile?
-  
-  // Relations
-  programs      Program[] // Created programs
-  assignedPrograms Program[] @relation("AssignedPrograms")
-  assignments   Assignment[]
-  progress      ProgressLog[]
   
   // Create Coach-Client Relation
   coachId       String?
@@ -43,39 +44,15 @@ model User {
   sentMessages     Message[] @relation("SentMessages")
   receivedMessages Message[] @relation("ReceivedMessages")
   
+  // Payment Relations
+  clientPayments Payment[] @relation("ClientPayments")
+  coachPayments  Payment[] @relation("CoachPayments")
+  
   // Subscriptions
   subscription  Subscription?
 
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
-
-  // Nutrition & Hydration
-  nutritionLogs NutritionLog[]
-  hydrationLogs HydrationLog[]
-}
-
-model NutritionLog {
-  id        String   @id @default(cuid())
-  userId    String
-  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  name      String
-  calories  Int
-  protein   Int
-  carbs     Int
-  fats      Int
-  createdAt DateTime @default(now())
-
-  @@index([userId])
-}
-
-model HydrationLog {
-  id        String   @id @default(cuid())
-  userId    String
-  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  amount    Int      // in ml
-  createdAt DateTime @default(now())
-
-  @@index([userId])
 }
 
 model Profile {
@@ -85,6 +62,37 @@ model Profile {
   height Float?
   weight Float?
   goals  String?
+  
+  // Detailed Personal Info
+  gender        String?
+  dob           DateTime?
+  nationality   String?
+  phoneNumber   String?
+  
+  // Professional Info
+  specializations String[]
+  experienceYears Int?
+  certifications  String[] // URLs to docs
+  languages       String[]
+  
+  // Coaching Details
+  coachingTypes   String[] // "1-on-1", "Group", etc.
+  pricingModel    String?  // "Monthly", "Per Session"
+  priceAmount     Float?
+  availability    Json?
+  
+  // Social & Legal
+  socialLinks     Json?
+  verificationDocs String[] // URLs
+  idDocument      String?   // URL
+  
+  // Old fields mapped or kept for compatibility
+  specialty     String?  // Keep for now, migrate to specializations
+  qualification String?  // Keep for now
+  rating        Float?   @default(5.0)
+  experience    String?  // Keep for now
+  commissionRate Float   @default(0.8) // 80% to coach by default
+  
   userId String @unique
   user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
@@ -114,77 +122,6 @@ model Session {
   userId       String
   expires      DateTime
   user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-}
-
-model Program {
-  id          String   @id @default(cuid())
-  title       String
-  description String?
-  creatorId   String
-  creator     User     @relation(fields: [creatorId], references: [id])
-  workouts    Workout[]
-  
-  // Assignments could be complex, simplifying for now
-  assignedTo  User[]   @relation("AssignedPrograms") // M-N relation? Or Assignment model?
-  // Let's assume M-N for now implicitly managed by Prisma or explicit:
-  // Usually explicit is better:
-  assignments Assignment[]
-
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-}
-
-model Assignment {
-  id        String   @id @default(cuid())
-  programId String
-  userId    String
-  program   Program  @relation(fields: [programId], references: [id])
-  user      User     @relation(fields: [userId], references: [id])
-  startDate DateTime @default(now())
-  status    String   // ACTIVE, COMPLETED
-}
-
-model Workout {
-  id          String   @id @default(cuid())
-  title       String
-  description String?
-  programId   String
-  program     Program  @relation(fields: [programId], references: [id], onDelete: Cascade)
-  exercises   WorkoutExercise[]
-  order       Int      @default(0)
-}
-
-model Exercise {
-  id          String   @id @default(cuid())
-  name        String   @unique
-  description String?
-  videoUrl    String?
-  muscleGroup String?
-  workouts    WorkoutExercise[]
-}
-
-model WorkoutExercise {
-  id          String   @id @default(cuid())
-  workoutId   String
-  workout     Workout  @relation(fields: [workoutId], references: [id], onDelete: Cascade)
-  exerciseId  String
-  exercise    Exercise @relation(fields: [exerciseId], references: [id])
-  sets        Int?
-  reps        String?
-  rest        Int?     // seconds
-  order       Int      @default(0)
-
-  @@index([workoutId])
-  @@index([exerciseId])
-}
-
-model ProgressLog {
-  id        String   @id @default(cuid())
-  userId    String
-  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  date      DateTime @default(now())
-  metrics   Json?    // weight, reps, etc.
-  photos    String[] // R2 urls
 }
 
 model Message {
@@ -217,3 +154,21 @@ model Application {
   details   Json?    // e.g., experience, goals
   createdAt DateTime @default(now())
 }
+
+model Payment {
+  id            String   @id @default(cuid())
+  amount        Float
+  status        String   @default("COMPLETED") // COMPLETED, PENDING, REFUNDED
+  
+  userId        String
+  user          User     @relation("ClientPayments", fields: [userId], references: [id])
+  
+  coachId       String?
+  coach         User?    @relation("CoachPayments", fields: [coachId], references: [id])
+  
+  coachShare    Float
+  platformShare Float
+  
+  createdAt     DateTime @default(now())
+}
+

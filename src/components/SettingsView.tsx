@@ -161,16 +161,13 @@ function NotificationsSection() {
             </h2>
             <div className="space-y-6">
                 {[
-                    "Email me about new workout assignments",
                     "Email me when a coach messages me",
-                    "Goal reminders and progress updates",
-                    "Weekly summary reports",
                     "Marketing and promotional offers"
                 ].map((item, i) => (
                     <div key={i} className="flex items-center justify-between py-3 border-b border-white/5 last:border-0">
                         <span className="text-white/80">{item}</span>
                         <label className="relative inline-flex items-center cursor-pointer">
-                            <input type="checkbox" defaultChecked={i < 3} className="sr-only peer" />
+                            <input type="checkbox" defaultChecked={i < 1} className="sr-only peer" />
                             <div className="w-11 h-6 bg-white/10 peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-brand rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-brand"></div>
                         </label>
                     </div>

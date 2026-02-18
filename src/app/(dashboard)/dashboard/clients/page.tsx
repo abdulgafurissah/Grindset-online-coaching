@@ -1,9 +1,8 @@
-import { getCoachClients, getCoachPrograms } from "@/app/actions/coach";
+import { getCoachClients } from "@/app/actions/coach";
 import ClientList from "./ClientList";
 
 export default async function ClientsPage() {
     const clients = await getCoachClients();
-    const programs = await getCoachPrograms();
 
     return (
         <div className="p-8">
@@ -16,7 +15,7 @@ export default async function ClientsPage() {
                 </button>
             </div>
 
-            <ClientList clients={clients} programs={programs} />
+            <ClientList clients={clients} />
         </div>
     );
 }

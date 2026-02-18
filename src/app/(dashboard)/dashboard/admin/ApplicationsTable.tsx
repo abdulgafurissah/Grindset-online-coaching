@@ -40,16 +40,16 @@ export default function ApplicationsTable({ applications }: { applications: Appl
 
     if (apps.length === 0) {
         return (
-            <div className="text-center py-12 text-white/30 border border-white/5 rounded-xl bg-black-light">
+            <div className="text-center py-12 text-slate-400 border border-slate-200 rounded-xl bg-slate-50 border-dashed">
                 No pending applications.
             </div>
         );
     }
 
     return (
-        <div className="rounded-xl border border-white/10 overflow-hidden bg-black-light">
+        <div className="rounded-xl border border-slate-200 overflow-hidden bg-white shadow-sm">
             <table className="w-full text-left text-sm">
-                <thead className="bg-white/5 text-white/60 font-medium uppercase text-xs tracking-wider">
+                <thead className="bg-slate-50 text-slate-500 font-bold uppercase text-xs tracking-wider border-b border-slate-200">
                     <tr>
                         <th className="px-6 py-4">Name</th>
                         <th className="px-6 py-4">Type</th>
@@ -57,29 +57,29 @@ export default function ApplicationsTable({ applications }: { applications: Appl
                         <th className="px-6 py-4 text-right">Actions</th>
                     </tr>
                 </thead>
-                <tbody className="divide-y divide-white/5">
+                <tbody className="divide-y divide-slate-100">
                     {apps.map((app) => (
-                        <tr key={app.id} className="hover:bg-white/5 transition-colors">
+                        <tr key={app.id} className="hover:bg-slate-50 transition-colors">
                             <td className="px-6 py-4">
-                                <div className="font-bold text-white mb-0.5">{app.name}</div>
-                                <div className="text-xs text-white/40">{app.email}</div>
+                                <div className="font-bold text-black-rich mb-0.5">{app.name}</div>
+                                <div className="text-xs text-slate-500">{app.email}</div>
                             </td>
                             <td className="px-6 py-4">
-                                <span className={`inline-flex items-center px-2 py-0.5 rounded text-xs font-bold uppercase tracking-wide border ${app.type === "COACH"
-                                        ? "bg-purple-500/10 text-purple-400 border-purple-500/20"
-                                        : "bg-blue-500/10 text-blue-400 border-blue-500/20"
+                                <span className={`inline-flex items-center px-2.5 py-1 rounded-md text-xs font-bold uppercase tracking-wide border ${app.type === "COACH"
+                                    ? "bg-purple-100 text-purple-700 border-purple-200"
+                                    : "bg-blue-100 text-blue-700 border-blue-200"
                                     }`}>
                                     {app.type}
                                 </span>
                             </td>
-                            <td className="px-6 py-4 text-white/40">
+                            <td className="px-6 py-4 text-slate-500 font-medium">
                                 {new Date(app.createdAt).toLocaleDateString()}
                             </td>
                             <td className="px-6 py-4 text-right space-x-2">
                                 <Button
                                     size="sm"
                                     variant="ghost"
-                                    className="h-8 w-8 p-0 text-red-400 hover:text-red-300 hover:bg-red-500/10 ring-1 ring-red-500/20"
+                                    className="h-8 w-8 p-0 text-red-500 hover:text-red-600 hover:bg-red-50 ring-1 ring-slate-200 hover:ring-red-200"
                                     onClick={() => handleAction(app.id, "REJECTED")}
                                     disabled={loadingId === app.id}
                                 >
@@ -87,7 +87,7 @@ export default function ApplicationsTable({ applications }: { applications: Appl
                                 </Button>
                                 <Button
                                     size="sm"
-                                    className="h-8 w-8 p-0 bg-green-500/20 text-green-400 hover:bg-green-500/30 ring-1 ring-green-500/20"
+                                    className="h-8 w-8 p-0 bg-green-100 text-green-700 hover:bg-green-200 hover:text-green-800 ring-1 ring-green-200 shadow-sm"
                                     onClick={() => handleAction(app.id, "APPROVED")}
                                     disabled={loadingId === app.id}
                                 >

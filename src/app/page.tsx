@@ -6,64 +6,63 @@ import { MindsetSection } from "@/components/MindsetSection";
 
 export default function Home() {
     return (
-        <main className="min-h-screen bg-black-rich text-white selection:bg-brand selection:text-black">
+        <main className="min-h-screen bg-white text-black-rich">
             <Navbar />
             <div id="hero"><Hero /></div>
             <div id="features"><Features /></div>
             <div id="mindset"><MindsetSection /></div>
             <div id="coaches"><TopCoaches /></div>
 
-            {/* Placeholder for Results/Testimonials */}
-            <section id="results" className="py-24 bg-black-light border-y border-white/5">
+            {/* Testimonials */}
+            <section id="results" className="py-24 bg-white border-y border-slate-100">
                 <div className="container mx-auto px-4 text-center">
-                    <h2 className="text-3xl md:text-5xl font-bold text-white uppercase tracking-tight mb-12">
+                    <h2 className="text-3xl md:text-5xl font-bold text-black-rich uppercase tracking-tight mb-12">
                         Real <span className="text-brand">Results</span>
                     </h2>
                     <div className="grid md:grid-cols-3 gap-8">
-                        <div className="bg-black-rich p-6 border border-white/10 rounded-xl">
-                            <div className="h-64 bg-white/5 mb-4 rounded-lg flex items-center justify-center text-white/20">
-                                Client Transformation Photo
+                        <div className="bg-slate-50 p-8 rounded-2xl border border-slate-100 shadow-sm hover:shadow-lg transition-all">
+                            <div className="h-64 bg-slate-200 mb-6 rounded-xl flex items-center justify-center text-black-rich/20 font-medium">
+                                Transformation Photo
                             </div>
-                            <h3 className="font-bold text-white">Sarah J.</h3>
-                            <p className="text-brand text-sm uppercase">Lost 15kg & Gained Confidence</p>
+                            <h3 className="font-bold text-xl text-black-rich mb-1">Sarah J.</h3>
+                            <p className="text-brand text-sm font-bold uppercase tracking-wide">Lost 15kg & Gained Confidence</p>
+                            <p className="mt-4 text-black-rich/60 italic">"The best investment I've ever made. The mindset coaching changed everything."</p>
                         </div>
-                        <div className="bg-black-rich p-6 border border-white/10 rounded-xl">
-                            <div className="h-64 bg-white/5 mb-4 rounded-lg flex items-center justify-center text-white/20">
-                                Client Transformation Photo
+                        <div className="bg-slate-50 p-8 rounded-2xl border border-slate-100 shadow-sm hover:shadow-lg transition-all">
+                            <div className="h-64 bg-slate-200 mb-6 rounded-xl flex items-center justify-center text-black-rich/20 font-medium">
+                                Transformation Photo
                             </div>
-                            <h3 className="font-bold text-white">Mike T.</h3>
-                            <p className="text-brand text-sm uppercase">Built Discipline & Muscle</p>
+                            <h3 className="font-bold text-xl text-black-rich mb-1">Mike T.</h3>
+                            <p className="text-brand text-sm font-bold uppercase tracking-wide">Built Discipline & Muscle</p>
+                            <p className="mt-4 text-black-rich/60 italic">"Finally a program that understands real life. The coaches are top tier."</p>
                         </div>
-                        <div className="bg-black-rich p-6 border border-white/10 rounded-xl">
-                            <div className="h-64 bg-white/5 mb-4 rounded-lg flex items-center justify-center text-white/20">
-                                Client Transformation Photo
+                        <div className="bg-slate-50 p-8 rounded-2xl border border-slate-100 shadow-sm hover:shadow-lg transition-all">
+                            <div className="h-64 bg-slate-200 mb-6 rounded-xl flex items-center justify-center text-black-rich/20 font-medium">
+                                Transformation Photo
                             </div>
-                            <h3 className="font-bold text-white">Emma R.</h3>
-                            <p className="text-brand text-sm uppercase">Overcame Anxiety & Got Fit</p>
+                            <h3 className="font-bold text-xl text-black-rich mb-1">Emma R.</h3>
+                            <p className="text-brand text-sm font-bold uppercase tracking-wide">Overcame Anxiety & Got Fit</p>
+                            <p className="mt-4 text-black-rich/60 italic">"I never thought I could do it until I found Grindset. Truly life changing."</p>
                         </div>
                     </div>
                 </div>
             </section>
 
-            {/* Pricing Section on Home */}
-            <section id="pricing" className="py-24 bg-black-rich">
+            {/* Pricing CTA */}
+            <section id="pricing" className="py-24 bg-black-rich text-white">
                 <div className="container mx-auto px-4 text-center mb-12">
-                    <h2 className="text-3xl md:text-5xl font-bold text-white uppercase tracking-tight">
+                    <h2 className="text-3xl md:text-5xl font-bold text-white uppercase tracking-tight mb-4">
                         Join the <span className="text-brand">Movement</span>
                     </h2>
+                    <p className="text-white/60 max-w-2xl mx-auto">
+                        Start your 7-day free trial today. Cancel anytime.
+                    </p>
                 </div>
-                {/* Reusing pricing logic simplified for home or just CTA */}
                 <div className="flex justify-center">
-                    <a href="/pricing" className="bg-brand hover:bg-brand-600 text-black-rich font-bold py-4 px-12 rounded-none uppercase text-lg tracking-widest transition-all">
+                    <a href="/pricing" className="bg-brand hover:bg-brand-600 text-white font-bold py-4 px-12 rounded-lg shadow-lg hover:shadow-brand/50 uppercase text-lg tracking-widest transition-all transform hover:-translate-y-1">
                         Start Your Journey
                     </a>
                 </div>
-            </section>
-
-            <section className="py-24 bg-brand flex items-center justify-center">
-                <h2 className="text-4xl md:text-6xl font-black text-black-rich uppercase text-center">
-                    Begin Your Transformation
-                </h2>
             </section>
         </main>
     );

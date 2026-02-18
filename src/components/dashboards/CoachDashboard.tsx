@@ -15,31 +15,12 @@ export function CoachDashboard() {
             <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4 mb-8">
                 <Card title="Active Clients" value="24" icon={Users} change="+3 this month" isPositive />
                 <Card title="Monthly Revenue" value="$4,200" icon={DollarSign} change="+12%" isPositive />
-                <Card title="Client Retention" value="92%" icon={TrendingUp} change="Top 5%" />
-                <Card title="Pending Check-ins" value="5" icon={CheckCircle} className="border-brand/50 bg-brand/5" />
             </div>
 
             <div className="grid gap-6 md:grid-cols-2">
                 <div className="rounded-xl border border-white/10 bg-black-light p-6">
                     <h3 className="mb-4 text-xl font-bold text-white">Action Items</h3>
-                    <div className="space-y-4">
-                        {[1, 2, 3].map((i) => (
-                            <div key={i} className="flex items-center justify-between p-4 bg-black-rich rounded-lg border border-white/5 hover:border-brand/30 transition-colors">
-                                <div className="flex items-center gap-4">
-                                    <div className="h-10 w-10 bg-white/5 rounded-full flex items-center justify-center text-white/50">
-                                        <Users className="h-5 w-5" />
-                                    </div>
-                                    <div>
-                                        <h4 className="font-bold text-white">Client Check-in #{i}</h4>
-                                        <p className="text-sm text-white/50">Submitted 2 hours ago</p>
-                                    </div>
-                                </div>
-                                <button className="px-4 py-2 bg-white/5 text-white text-xs font-bold uppercase rounded-sm hover:bg-brand hover:text-black-rich transition-colors">
-                                    Review
-                                </button>
-                            </div>
-                        ))}
-                    </div>
+                    <div className="text-white/40 text-sm">No pending actions.</div>
                 </div>
 
                 <div className="rounded-xl border border-white/10 bg-black-light p-6">
