@@ -25,7 +25,7 @@ export default async function CoachesPage() {
                     </div>
                 ) : (
                     <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-                        {coaches.map((coach) => (
+                        {coaches.map((coach: any) => (
                             <div key={coach.id} className="bg-white border border-slate-100 rounded-2xl overflow-hidden group hover:shadow-xl hover:border-brand/20 transition-all duration-300">
                                 <div className="h-72 bg-slate-100 flex items-center justify-center relative overflow-hidden">
                                     {coach.image ? (

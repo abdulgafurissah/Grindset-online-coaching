@@ -60,7 +60,7 @@ export default async function CoachFinancePage() {
                             </tr>
                         </thead>
                         <tbody className="divide-y divide-slate-100">
-                            {payments.map((payment) => (
+                            {payments.map((payment: any) => (
                                 <tr key={payment.id} className="hover:bg-slate-50 transition-colors">
                                     <td className="px-6 py-4 font-medium text-black-rich">{payment.user.name}</td>
                                     <td className="px-6 py-4 font-bold text-green-600">{formatCurrency(payment.coachShare)}</td>

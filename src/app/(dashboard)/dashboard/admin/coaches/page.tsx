@@ -22,7 +22,7 @@ export default async function AdminCoachesPage() {
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {coaches.map((coach) => (
+                {coaches.map((coach: any) => (
                     <div key={coach.id} className="bg-white border border-slate-200 rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-all">
                         <div className="p-6">
                             <div className="flex justify-between items-start mb-4">

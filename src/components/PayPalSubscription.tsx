@@ -48,10 +48,13 @@ export function PayPalSubscription({ planId, onSuccess }: PayPalSubscriptionProp
                         // In a real app, you might want to call your backend to verify the subscription status
                         // For now we trust the client callback success for MVP, but update our DB
                         // data.subscriptionID is crucial
-                        await createPayPalSubscription(data.subscriptionID, planId);
-
-                        toast.success("Subscription active! Welcome to the Grind.");
-                        if (onSuccess) onSuccess();
+                        if (data.subscriptionID) {
+                            await createPayPalSubscription(data.subscriptionID, planId);
+                            toast.success("Subscription active! Welcome to the Grind.");
+                            if (onSuccess) onSuccess();
+                        } else {
+                            toast.error("Payment successful but subscription ID missing.");
+                        }
                         router.refresh(); // Refresh to update UI state
                     } catch (error) {
                         console.error("Subscription error", error);

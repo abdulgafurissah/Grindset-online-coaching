@@ -31,7 +31,7 @@ export default async function AdminApplicationsPage() {
             </div>
 
             <div className="grid gap-6">
-                {pendingCoaches.map((coach) => (
+                {pendingCoaches.map((coach: any) => (
                     <div key={coach.id} className="bg-white border border-slate-200 rounded-xl p-6 shadow-sm flex flex-col md:flex-row gap-6">
                         <div className="flex-1 space-y-4">
                             <div className="flex items-start justify-between">
@@ -49,7 +49,7 @@ export default async function AdminApplicationsPage() {
                                 <div>
                                     <p className="font-semibold text-slate-700">Specializations</p>
                                     <div className="flex flex-wrap gap-1 mt-1">
-                                        {coach.profile?.specializations.map((s) => (
+                                        {coach.profile?.specializations?.map((s: string) => (
                                             <span key={s} className="bg-slate-100 text-slate-600 px-2 py-0.5 rounded text-xs">{s}</span>
                                         ))}
                                     </div>
