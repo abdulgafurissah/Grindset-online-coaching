@@ -22,35 +22,33 @@ export default function ClientList({ clients }: { clients: Client[] }) {
     );
 
     return (
-        <>
-            <div className="mb-6">
-                <div className="relative">
-                    <Search className="absolute left-3 top-3 h-4 w-4 text-white/40" />
-                    <input
-                        type="text"
-                        placeholder="Search clients by name, email..."
-                        value={searchTerm}
-                        onChange={(e) => setSearchTerm(e.target.value)}
-                        className="w-full bg-black-light border border-white/10 rounded-md py-2.5 pl-10 pr-4 text-white placeholder:text-white/30 focus:outline-none focus:border-brand/50 transition-all font-medium"
-                    />
-                </div>
+        <div className="space-y-6">
+            <div className="relative">
+                <Search className="absolute left-3 top-3 h-4 w-4 text-slate-400" />
+                <input
+                    type="text"
+                    placeholder="Search clients by name, email..."
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                    className="w-full bg-white border border-slate-200 rounded-lg py-2.5 pl-10 pr-4 text-black-rich placeholder:text-slate-400 focus:outline-none focus:border-brand focus:ring-1 focus:ring-brand transition-all font-medium shadow-sm"
+                />
             </div>
 
-            <div className="rounded-xl border border-white/10 overflow-hidden bg-black-light">
+            <div className="rounded-xl border border-slate-200 overflow-hidden bg-white shadow-sm">
                 <table className="w-full text-left text-sm">
-                    <thead className="bg-white/5 text-white/60 font-medium uppercase text-xs tracking-wider">
+                    <thead className="bg-slate-50 text-slate-500 font-bold uppercase text-xs tracking-wider border-b border-slate-200">
                         <tr>
                             <th className="px-6 py-4">Client</th>
                             <th className="px-6 py-4">Status</th>
                             <th className="px-6 py-4">Joined At</th>
                         </tr>
                     </thead>
-                    <tbody className="divide-y divide-white/5">
+                    <tbody className="divide-y divide-slate-100">
                         {filteredClients.map((client) => (
-                            <tr key={client.id} className="hover:bg-white/5 transition-colors group cursor-pointer">
+                            <tr key={client.id} className="hover:bg-slate-50 transition-colors group cursor-pointer">
                                 <td className="px-6 py-4">
                                     <div className="flex items-center gap-3">
-                                        <div className="h-12 w-12 rounded-full overflow-hidden bg-white/10 relative">
+                                        <div className="h-10 w-10 rounded-full overflow-hidden bg-slate-100 relative border border-slate-200">
                                             {client.image ? (
                                                 <Image
                                                     src={client.image}
@@ -59,32 +57,31 @@ export default function ClientList({ clients }: { clients: Client[] }) {
                                                     className="object-cover"
                                                 />
                                             ) : (
-                                                <Image
-                                                    src={`https://ui-avatars.com/api/?name=${client.name || "U"}&background=random&color=fff`}
-                                                    alt={client.name || "Client"}
-                                                    fill
-                                                    className="object-cover"
-                                                />
+                                                <div className="w-full h-full flex items-center justify-center bg-slate-200 text-slate-500 font-bold">
+                                                    {client.name?.[0] || "?"}
+                                                </div>
                                             )}
                                         </div>
                                         <div>
-                                            <div className="font-bold text-white">{client.name || "Unnamed"}</div>
-                                            <div className="text-xs text-white/40">{client.email}</div>
+                                            <div className="font-bold text-black-rich">{client.name || "Unnamed"}</div>
+                                            <div className="text-xs text-slate-500">{client.email}</div>
                                         </div>
                                     </div>
                                 </td>
                                 <td className="px-6 py-4">
-                                    <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${client.status === "Active" ? "bg-green-500/10 text-green-500" : "bg-yellow-500/10 text-yellow-500"
+                                    <span className={`inline-flex items-center px-2.5 py-1 rounded-md text-xs font-bold uppercase tracking-wide border ${client.status === "Active"
+                                        ? "bg-green-100 text-green-700 border-green-200"
+                                        : "bg-yellow-100 text-yellow-700 border-yellow-200"
                                         }`}>
                                         {client.status}
                                     </span>
                                 </td>
-                                <td className="px-6 py-4 text-white/50">{client.joinedAt}</td>
+                                <td className="px-6 py-4 text-slate-500 font-medium">{client.joinedAt}</td>
                             </tr>
                         ))}
                         {filteredClients.length === 0 && (
                             <tr>
-                                <td colSpan={3} className="px-6 py-12 text-center text-white/30">
+                                <td colSpan={3} className="px-6 py-12 text-center text-slate-400">
                                     No clients found.
                                 </td>
                             </tr>
@@ -92,6 +89,6 @@ export default function ClientList({ clients }: { clients: Client[] }) {
                     </tbody>
                 </table>
             </div>
-        </>
+        </div>
     );
 }

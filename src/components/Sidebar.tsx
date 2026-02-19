@@ -35,9 +35,9 @@ const coachLinks = [
 
 const adminLinks = [
     { href: "/dashboard/admin", label: "Overview", icon: LayoutDashboard },
-    { href: "/dashboard/admin/coaches", label: "Coaches", icon: Dumbbell },
+    { href: "/dashboard/admin/coaches", label: "Coaches", icon: Users },
+    { href: "/dashboard/admin/programs", label: "Programs", icon: Dumbbell },
     { href: "/dashboard/admin/finances", label: "Financials", icon: DollarSign },
-    { href: "/dashboard/clients", label: "Users", icon: Users },
 ];
 
 interface SidebarProps {
@@ -49,17 +49,27 @@ export function Sidebar({ className, onClose }: SidebarProps) {
     const pathname = usePathname();
     const { data: session } = useSession();
 
-    // cast to any because our session type augmentation might not be picked up by IDE perfectly yet
-    // or we can just treat it as unknown and check property
     const info = (session?.user as any) || {};
     const role = info.role || "CLIENT";
 
-    let links = [...commonLinks.slice(0, 1), ...clientLinks, ...commonLinks.slice(1)];
+    let links: any[] = [];
 
-    if (role === "COACH") {
-        links = [...commonLinks.slice(0, 1), ...coachLinks, ...commonLinks.slice(1)];
-    } else if (role === "ADMIN") {
-        links = [...commonLinks.slice(0, 1), ...adminLinks, ...commonLinks.slice(1)];
+    if (role === "ADMIN") {
+        links = adminLinks;
+    } else if (role === "COACH") {
+        links = [
+            { href: "/dashboard", label: "Overview", icon: LayoutDashboard },
+            ...coachLinks,
+            { href: "/dashboard/messages", label: "Messages", icon: MessageSquare },
+            { href: "/dashboard/settings", label: "Settings", icon: Settings },
+        ];
+    } else {
+        // CLIENT
+        links = [
+            { href: "/dashboard", label: "Overview", icon: LayoutDashboard },
+            { href: "/dashboard/messages", label: "Messages", icon: MessageSquare },
+            { href: "/dashboard/settings", label: "Settings", icon: Settings },
+        ];
     }
 
     return (

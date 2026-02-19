@@ -2,6 +2,8 @@ import { Navbar } from "@/components/Navbar";
 import { User, Star, Award, BookOpen } from "lucide-react";
 import Image from "next/image";
 import { getCoaches } from "@/app/actions/coach-public";
+import { JoinAsCoachCTA } from "@/components/JoinAsCoachCTA";
+import { BookConsultationDialog } from "@/components/BookConsultationDialog";
 
 export default async function CoachesPage() {
     const coaches = await getCoaches();
@@ -14,9 +16,10 @@ export default async function CoachesPage() {
                     <h1 className="text-4xl md:text-6xl font-black uppercase tracking-tighter mb-4 text-black-rich">
                         Meet Your <span className="text-brand">Mentors</span>
                     </h1>
-                    <p className="text-black-rich/60 max-w-2xl mx-auto text-lg">
+                    <p className="text-black-rich/60 max-w-2xl mx-auto text-lg mb-8">
                         Expert guidance to help you unlock your full potential.
                     </p>
+                    <JoinAsCoachCTA />
                 </div>
 
                 {coaches.length === 0 ? (
@@ -69,9 +72,12 @@ export default async function CoachesPage() {
                                         )}
                                     </div>
 
-                                    <a href={`/register?coach=${coach.id}`} className="block w-full py-3 bg-black-rich hover:bg-brand text-white text-center font-bold uppercase text-sm tracking-widest rounded-lg transition-colors">
-                                        Train with {coach.name?.split(" ")[0]}
-                                    </a>
+                                    <div className="space-y-3">
+                                        <a href={`/register?coach=${coach.id}&type=subscription`} className="block w-full py-3 bg-black-rich hover:bg-brand text-white text-center font-bold uppercase text-sm tracking-widest rounded-lg transition-colors">
+                                            Train with {coach.name?.split(" ")[0]}
+                                        </a>
+                                        <BookConsultationDialog coachId={coach.id} coachName={coach.name || "Coach"} />
+                                    </div>
                                 </div>
                             </div>
                         ))}

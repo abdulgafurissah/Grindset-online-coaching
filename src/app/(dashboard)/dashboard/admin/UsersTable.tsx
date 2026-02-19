@@ -58,7 +58,8 @@ export default function UsersTable({ users, coaches }: { users: User[], coaches:
                 setUserList(prev => prev.map(u => u.id === userId ? { ...u, coach: assignedCoach || null, coachId: assignedCoach?.id } : u));
                 toast.success(`Assigned coach: ${assignedCoach?.name}`);
             } else {
-                toast.error("Failed to assign coach");
+                // @ts-ignore
+                toast.error(result.error || "Failed to assign coach");
             }
         } catch {
             toast.error("Error assigning coach");

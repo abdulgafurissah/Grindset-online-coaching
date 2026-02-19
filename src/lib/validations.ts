@@ -17,17 +17,17 @@ export const createProgramSchema = z.object({
 });
 
 export const logWorkoutSchema = z.object({
-    workoutId: z.string().uuid("Invalid Workout ID"),
+    workoutId: z.string().min(1, "Invalid Workout ID"),
     // Allow loose structure for flexibility, but ensure it's an object
     metrics: z.record(z.string(), z.any()).optional(),
 });
 
 export const updateApplicationStatusSchema = z.object({
-    appId: z.string().uuid("Invalid Application ID"),
+    appId: z.string().min(1, "Invalid Application ID"),
     status: z.enum(["APPROVED", "REJECTED"]),
 });
 
 export const assignCoachSchema = z.object({
-    clientId: z.string().uuid("Invalid Client ID"),
-    coachId: z.string().uuid("Invalid Coach ID").nullable(),
+    clientId: z.string().min(1, "Client ID is required"),
+    coachId: z.string().min(1, "Coach ID is required").nullable(),
 });

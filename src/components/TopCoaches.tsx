@@ -1,5 +1,6 @@
 import { User } from "lucide-react";
 import Image from "next/image";
+import { JoinAsCoachCTA } from "@/components/JoinAsCoachCTA";
 
 const topCoaches = [
     {
@@ -63,6 +64,8 @@ export function TopCoaches() {
                         </div>
                     ))}
                 </div>
+
+                <JoinAsCoachCTA />
 
                 <div className="text-center mt-12">
                     <a href="/coaches" className="inline-block bg-white text-black-rich border border-gray-200 hover:border-brand hover:text-brand font-bold py-4 px-12 rounded-lg transition-all shadow-sm hover:shadow-md">

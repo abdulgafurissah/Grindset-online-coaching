@@ -29,7 +29,8 @@ export default function ApplicationsTable({ applications }: { applications: Appl
                 // Optimistic update
                 setApps(apps.filter(app => app.id !== id));
             } else {
-                toast.error("Action failed");
+                // @ts-ignore
+                toast.error(result.error || "Action failed");
             }
         } catch {
             toast.error("Error updating application");

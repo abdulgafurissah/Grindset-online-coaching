@@ -15,30 +15,30 @@ export default async function BillingPage() {
     const PLAN_ID = process.env.PAYPAL_PLAN_ID || "P-SANDBOX-DEFAULT";
 
     return (
-        <div className="p-8 max-w-5xl mx-auto">
-            <h1 className="text-3xl font-bold text-white mb-2 uppercase tracking-tight">Billing & Subscription</h1>
-            <p className="text-white/60 mb-8">Manage your plan and payment details.</p>
+        <div className="p-8 max-w-5xl mx-auto text-black-rich">
+            <h1 className="text-3xl font-bold text-black-rich mb-2 uppercase tracking-tight">Billing & Subscription</h1>
+            <p className="text-slate-500 mb-8">Manage your plan and payment details.</p>
 
             <div className="grid md:grid-cols-2 gap-8">
                 {/* Status Card */}
-                <div className="bg-black-light border border-white/10 rounded-xl p-8 flex flex-col justify-between">
+                <div className="bg-white border border-slate-200 rounded-xl p-8 flex flex-col justify-between shadow-sm">
                     <div>
-                        <h2 className="text-xl font-bold text-white mb-4 flex items-center gap-2">
+                        <h2 className="text-xl font-bold text-black-rich mb-4 flex items-center gap-2">
                             <Shield className="h-5 w-5 text-brand" />
                             Current Status
                         </h2>
                         <div className="space-y-4">
-                            <div className="flex justify-between items-center py-2 border-b border-white/5">
-                                <span className="text-white/60">Plan</span>
-                                <span className="font-bold text-white">
+                            <div className="flex justify-between items-center py-2 border-b border-slate-100">
+                                <span className="text-slate-500">Plan</span>
+                                <span className="font-bold text-black-rich">
                                     {subscription.isValid ? "Premium Coaching" : "Free / Inactive"}
                                 </span>
                             </div>
-                            <div className="flex justify-between items-center py-2 border-b border-white/5">
-                                <span className="text-white/60">Status</span>
+                            <div className="flex justify-between items-center py-2 border-b border-slate-100">
+                                <span className="text-slate-500">Status</span>
                                 <span className={`font-bold px-2 py-0.5 rounded text-xs uppercase ${subscription.isValid
-                                    ? "bg-green-500/10 text-green-500"
-                                    : "bg-white/10 text-white/40"
+                                    ? "bg-green-100 text-green-600"
+                                    : "bg-slate-100 text-slate-500"
                                     }`}>
                                     {subscription.isValid ? "Active" : "Inactive"}
                                 </span>
@@ -49,20 +49,20 @@ export default async function BillingPage() {
                     <div className="mt-8">
                         {subscription.isValid ? (
                             <div className="text-center">
-                                <p className="text-sm text-white/60 mb-4">
+                                <p className="text-sm text-slate-500 mb-4">
                                     Your subscription is active and managed via PayPal.
                                 </p>
                                 <a
                                     href="https://www.paypal.com/myaccount/autopay/"
                                     target="_blank"
                                     rel="noopener noreferrer"
-                                    className={buttonVariants({ className: "w-full bg-white/10 hover:bg-white/20 text-white border border-white/10" })}
+                                    className={buttonVariants({ variant: "outline", className: "w-full" })}
                                 >
                                     Manage on PayPal
                                 </a>
                             </div>
                         ) : (
-                            <p className="text-sm text-white/40 text-center">
+                            <p className="text-sm text-slate-400 text-center">
                                 Subscribe to access premium features.
                             </p>
                         )}
@@ -71,8 +71,8 @@ export default async function BillingPage() {
 
                 {/* Pricing Card (Show mostly if inactive) */}
                 {!subscription.isValid && (
-                    <div className="bg-gradient-to-br from-brand/10 to-black-light border border-brand/20 rounded-xl p-8 relative overflow-hidden">
-                        <div className="absolute top-0 right-0 bg-brand text-black-rich text-xs font-bold px-3 py-1 rounded-bl-xl uppercase tracking-wider">
+                    <div className="bg-black-rich text-white border border-slate-800 rounded-xl p-8 relative overflow-hidden shadow-xl">
+                        <div className="absolute top-0 right-0 bg-brand text-white text-xs font-bold px-3 py-1 rounded-bl-xl uppercase tracking-wider">
                             Recommended
                         </div>
 

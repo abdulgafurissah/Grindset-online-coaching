@@ -1,3 +1,4 @@
+
 "use server";
 
 import prisma from "@/lib/prisma";
@@ -77,4 +78,31 @@ export async function getMessages(partnerId: string) {
         },
         orderBy: { createdAt: 'asc' }
     });
+}
+
+// New function to get contacts for starting new chats
+export async function getContacts() {
+    const session = await auth();
+    if (!session?.user?.id) return [];
+
+    const currentUser = await prisma.user.findUnique({
+        where: { id: session.user.id },
+        select: { role: true }
+    });
+
+    if (currentUser?.role === "COACH") {
+        // Coach sees Clients
+        return await prisma.user.findMany({
+            where: { role: "CLIENT" },
+            select: { id: true, name: true, image: true, email: true }
+        });
+    } else if (currentUser?.role === "CLIENT") {
+        // Client sees Coaches
+        return await prisma.user.findMany({
+            where: { role: "COACH", approvalStatus: "APPROVED" },
+            select: { id: true, name: true, image: true, email: true }
+        });
+    }
+
+    return [];
 }

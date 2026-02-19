@@ -53,7 +53,16 @@ model User {
 
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
+
+  createdPrograms Program[] @relation("CreatedPrograms")
+
+  // Consultations
+  consultationsAsCoach  Consultation[] @relation("CoachConsultations")
+  consultationsAsClient Consultation[] @relation("ClientConsultations")
+  
+  progress      Progress[]
 }
+
 
 model Profile {
   id     String @id @default(cuid())
@@ -171,4 +180,46 @@ model Payment {
   
   createdAt     DateTime @default(now())
 }
+
+model Program {
+  id          String   @id @default(cuid())
+  title       String
+  description String?
+  link        String
+  image       String?
+  creatorId   String
+  creator     User     @relation("CreatedPrograms", fields: [creatorId], references: [id])
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+
+model Consultation {
+  id          String   @id @default(cuid())
+  
+  clientId    String
+  client      User     @relation("ClientConsultations", fields: [clientId], references: [id], onDelete: Cascade)
+  
+  coachId     String
+  coach       User     @relation("CoachConsultations", fields: [coachId], references: [id], onDelete: Cascade)
+  
+  status      String   @default("PENDING") // PENDING, APPROVED, REJECTED, COMPLETED
+  requestedAt DateTime // Date suggested by client
+  message     String?
+  
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model Progress {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  date      DateTime @default(now())
+  metrics   Json
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
 
