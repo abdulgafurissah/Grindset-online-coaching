@@ -9,6 +9,24 @@ export async function sendMessage(receiverId: string, content: string) {
     const session = await auth();
     if (!session?.user?.id) return { error: "Unauthorized" };
 
+    // Verify sender and receiver are a matched coach-client pair
+    const sender = await prisma.user.findUnique({
+        where: { id: session.user.id },
+        select: { role: true, coachId: true }
+    });
+    const receiver = await prisma.user.findUnique({
+        where: { id: receiverId },
+        select: { role: true, coachId: true }
+    });
+
+    if (!sender || !receiver) return { error: "Invalid user" };
+
+    const isPaired =
+        (sender.role === "CLIENT" && sender.coachId === receiverId) ||
+        (sender.role === "COACH" && receiver.coachId === session.user.id);
+
+    if (!isPaired) return { error: "You are not authorized to message this user." };
+
     try {
         await prisma.message.create({
             data: {
@@ -87,21 +105,23 @@ export async function getContacts() {
 
     const currentUser = await prisma.user.findUnique({
         where: { id: session.user.id },
-        select: { role: true }
+        select: { role: true, coachId: true }
     });
 
     if (currentUser?.role === "COACH") {
-        // Coach sees Clients
+        // Coach only sees their assigned clients
         return await prisma.user.findMany({
-            where: { role: "CLIENT" },
+            where: { coachId: session.user.id },
             select: { id: true, name: true, image: true, email: true }
         });
     } else if (currentUser?.role === "CLIENT") {
-        // Client sees Coaches
-        return await prisma.user.findMany({
-            where: { role: "COACH", approvalStatus: "APPROVED" },
+        // Client only sees their assigned coach
+        if (!currentUser.coachId) return [];
+        const coach = await prisma.user.findUnique({
+            where: { id: currentUser.coachId },
             select: { id: true, name: true, image: true, email: true }
         });
+        return coach ? [coach] : [];
     }
 
     return [];

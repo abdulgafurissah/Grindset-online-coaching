@@ -137,6 +137,64 @@ export default function RegisterPage() {
                                         className="flex h-11 w-full rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm text-black-rich ring-offset-white file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-slate-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
                                     />
                                 </div>
+                                <div className="grid gap-2">
+                                    <label className="text-sm font-medium leading-none text-black-rich" htmlFor="gender">
+                                        Gender
+                                    </label>
+                                    <select
+                                        id="gender"
+                                        name="gender"
+                                        required
+                                        disabled={isLoading}
+                                        className="flex h-11 w-full rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm text-black-rich ring-offset-white file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-slate-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+                                    >
+                                        <option value="">Select Gender</option>
+                                        <option value="MALE">Male</option>
+                                        <option value="FEMALE">Female</option>
+                                        <option value="OTHER">Other</option>
+                                    </select>
+                                </div>
+                                <div className="grid gap-2">
+                                    <label className="text-sm font-medium leading-none text-black-rich" htmlFor="dob">
+                                        Date of Birth
+                                    </label>
+                                    <input
+                                        id="dob"
+                                        name="dob"
+                                        type="date"
+                                        required
+                                        disabled={isLoading}
+                                        className="flex h-11 w-full rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm text-black-rich ring-offset-white file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-slate-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+                                    />
+                                </div>
+                                <div className="grid gap-2">
+                                    <label className="text-sm font-medium leading-none text-black-rich" htmlFor="phoneNumber">
+                                        Phone Number
+                                    </label>
+                                    <input
+                                        id="phoneNumber"
+                                        name="phoneNumber"
+                                        type="tel"
+                                        placeholder="+1234567890"
+                                        required
+                                        disabled={isLoading}
+                                        className="flex h-11 w-full rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm text-black-rich ring-offset-white file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-slate-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+                                    />
+                                </div>
+                                <div className="grid gap-2">
+                                    <label className="text-sm font-medium leading-none text-black-rich" htmlFor="nationality">
+                                        Nationality
+                                    </label>
+                                    <input
+                                        id="nationality"
+                                        name="nationality"
+                                        type="text"
+                                        placeholder="e.g. American"
+                                        required
+                                        disabled={isLoading}
+                                        className="flex h-11 w-full rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm text-black-rich ring-offset-white file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-slate-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+                                    />
+                                </div>
                                 <button
                                     disabled={isLoading}
                                     type="submit"

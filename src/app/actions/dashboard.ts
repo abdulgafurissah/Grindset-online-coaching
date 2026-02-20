@@ -10,9 +10,10 @@ export async function getCoachDashboardStats() {
     if (!session?.user?.id) return null;
 
     const [activeClients, totalRevenue, pendingApps, pendingConsultations] = await Promise.all([
+        // Only count clients assigned to this coach
         prisma.user.count({
             where: {
-                role: "CLIENT",
+                coachId: session.user.id,
                 isActive: true
             }
         }),

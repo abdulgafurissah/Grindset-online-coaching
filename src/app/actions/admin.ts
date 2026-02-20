@@ -158,3 +158,118 @@ export async function getAvailableCoaches() {
         return [];
     }
 }
+
+export async function getClients() {
+    const session = await auth();
+    if (!session?.user?.id || (session.user as any).role !== "ADMIN") return [];
+
+    try {
+        return await prisma.user.findMany({
+            where: { role: "CLIENT" },
+            orderBy: { createdAt: 'desc' },
+            include: {
+                coach: { select: { id: true, name: true } }
+            }
+        });
+    } catch (error) {
+        console.error("Failed to fetch clients:", error);
+        return [];
+    }
+}
+
+export async function getPrograms() {
+    const session = await auth();
+    if (!session?.user?.id || (session.user as any).role !== "ADMIN") return [];
+
+    try {
+        return await prisma.program.findMany({
+            orderBy: { createdAt: 'desc' },
+        });
+    } catch (error) {
+        console.error("Failed to fetch programs:", error);
+        return [];
+    }
+}
+
+export async function createProgram(data: { title: string; description?: string; link: string }) {
+    const session = await auth();
+    if (!session?.user?.id || (session.user as any).role !== "ADMIN") return { error: "Unauthorized" };
+
+    try {
+        await prisma.program.create({
+            data: {
+                ...data,
+                creatorId: session.user.id,
+            },
+        });
+
+        revalidatePath("/dashboard/admin");
+        return { success: true };
+    } catch (error) {
+        console.error("Failed to create program:", error);
+        return { error: "Failed to create program" };
+    }
+}
+
+export async function getClientById(id: string) {
+    const session = await auth();
+    if (!session?.user?.id || (session.user as any).role !== "ADMIN") return null;
+
+    try {
+        return await prisma.user.findUnique({
+            where: { id },
+            include: {
+                profile: true,
+                coach: { select: { id: true, name: true } },
+                assignedPrograms: true,
+            },
+        });
+    } catch (error) {
+        console.error("Failed to fetch client:", error);
+        return null;
+    }
+}
+
+export async function assignProgramToClient(userId: string, programId: string) {
+    const session = await auth();
+    if (!session?.user?.id || (session.user as any).role !== "ADMIN") return { error: "Unauthorized" };
+
+    try {
+        await prisma.user.update({
+            where: { id: userId },
+            data: {
+                assignedPrograms: {
+                    connect: { id: programId },
+                },
+            },
+        });
+
+        revalidatePath(`/dashboard/admin/clients/${userId}`);
+        return { success: true };
+    } catch (error) {
+        console.error("Failed to assign program:", error);
+        return { error: "Failed to assign program" };
+    }
+}
+
+export async function unassignProgramFromClient(userId: string, programId: string) {
+    const session = await auth();
+    if (!session?.user?.id || (session.user as any).role !== "ADMIN") return { error: "Unauthorized" };
+
+    try {
+        await prisma.user.update({
+            where: { id: userId },
+            data: {
+                assignedPrograms: {
+                    disconnect: { id: programId },
+                },
+            },
+        });
+
+        revalidatePath(`/dashboard/admin/clients/${userId}`);
+        return { success: true };
+    } catch (error) {
+        console.error("Failed to unassign program:", error);
+        return { error: "Failed to unassign program" };
+    }
+}

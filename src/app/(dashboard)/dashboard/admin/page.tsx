@@ -1,7 +1,9 @@
-import { getAdminStats, getApplications, getAdminUsers, getAvailableCoaches } from "@/app/actions/admin";
+import { getAdminStats, getApplications, getAdminUsers, getAvailableCoaches, getClients, getPrograms } from "@/app/actions/admin";
 import { CheckCircle, Clock, DollarSign, Users } from "lucide-react";
 import ApplicationsTable from "./ApplicationsTable";
 import UsersTable from "./UsersTable";
+import ClientsTable from "./ClientsTable";
+import ProgramsTable from "./ProgramsTable";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 export default async function AdminPage() {
@@ -9,6 +11,8 @@ export default async function AdminPage() {
     const pendingApplications = await getApplications("PENDING");
     const adminUsers = await getAdminUsers();
     const coaches = await getAvailableCoaches();
+    const clients = await getClients();
+    const programs = await getPrograms();
 
     if (!stats) return <div className="p-8 text-black-rich">Access Denied</div>;
 
@@ -49,6 +53,12 @@ export default async function AdminPage() {
                     <TabsTrigger value="users" className="data-[state=active]:bg-brand data-[state=active]:text-white text-slate-600 rounded-md px-6">
                         User Management
                     </TabsTrigger>
+                    <TabsTrigger value="clients" className="data-[state=active]:bg-brand data-[state=active]:text-white text-slate-600 rounded-md px-6">
+                        Client Management
+                    </TabsTrigger>
+                    <TabsTrigger value="programs" className="data-[state=active]:bg-brand data-[state=active]:text-white text-slate-600 rounded-md px-6">
+                        Program Management
+                    </TabsTrigger>
                 </TabsList>
 
                 <TabsContent value="applications">
@@ -57,6 +67,14 @@ export default async function AdminPage() {
 
                 <TabsContent value="users">
                     <UsersTable users={adminUsers} coaches={coaches} />
+                </TabsContent>
+
+                <TabsContent value="clients">
+                    <ClientsTable clients={clients} coaches={coaches} />
+                </TabsContent>
+
+                <TabsContent value="programs">
+                    <ProgramsTable programs={programs} />
                 </TabsContent>
             </Tabs>
         </div>

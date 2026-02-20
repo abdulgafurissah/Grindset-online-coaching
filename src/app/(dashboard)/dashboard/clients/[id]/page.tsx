@@ -8,7 +8,12 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 export default async function ClientDetailsPage({ params }: { params: { id: string } }) {
     const session = await auth();
-    // In real app, ensure user is coach/admin
+    const userRole = (session?.user as any)?.role;
+
+    // Only coaches and admins can view client detail pages
+    if (!session?.user?.id || (userRole !== "COACH" && userRole !== "ADMIN")) {
+        redirect("/dashboard");
+    }
 
     const client = await prisma.user.findUnique({
         where: { id: params.id },
@@ -25,6 +30,11 @@ export default async function ClientDetailsPage({ params }: { params: { id: stri
     });
 
     if (!client) return notFound();
+
+    // Coaches can only view their own assigned clients
+    if (userRole === "COACH" && client.coachId !== session.user.id) {
+        return notFound();
+    }
 
     // Process logs
     const workoutLogs = client.progress.filter((log: any) => log.metrics?.type === "WORKOUT_COMPLETION");

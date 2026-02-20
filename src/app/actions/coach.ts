@@ -10,10 +10,9 @@ export async function getCoachClients() {
     const session = await auth();
     if (!session?.user?.id) return [];
 
-    // For MVP, assuming all CLIENTS are visible to COACH/ADMIN
-    // In real app, might filter by 'coachId' if User model had it
+    // Only return clients assigned to this coach
     const clients = await prisma.user.findMany({
-        where: { role: "CLIENT" },
+        where: { coachId: session.user.id },
         orderBy: { createdAt: 'desc' }
     });
 

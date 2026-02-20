@@ -62,16 +62,17 @@ export default function ChatInterface({
     // Fetch messages when active chat changes
     useEffect(() => {
         if (!activeChat) return;
+        let isMounted = true;
 
         const fetchMessages = async () => {
             setIsLoadingMessages(true);
             try {
                 const fetchedMessages = await getMessages(activeChat.id);
-                setMessages(fetchedMessages);
+                if (isMounted) setMessages(fetchedMessages);
             } catch (error) {
-                toast.error("Failed to load messages");
+                if (isMounted) toast.error("Failed to load messages");
             } finally {
-                setIsLoadingMessages(false);
+                if (isMounted) setIsLoadingMessages(false);
             }
         };
 
@@ -79,11 +80,19 @@ export default function ChatInterface({
 
         // Polling for new messages (MVP only)
         const interval = setInterval(async () => {
-            const fetchedMessages = await getMessages(activeChat.id);
-            setMessages(fetchedMessages);
+            if (!isMounted) return;
+            try {
+                const fetchedMessages = await getMessages(activeChat.id);
+                if (isMounted) setMessages(fetchedMessages);
+            } catch {
+                // Silently ignore polling errors (e.g. during navigation)
+            }
         }, 5000);
 
-        return () => clearInterval(interval);
+        return () => {
+            isMounted = false;
+            clearInterval(interval);
+        };
     }, [activeChat]);
 
     // Scroll to bottom
