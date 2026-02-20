@@ -9,7 +9,6 @@ export async function sendMessage(receiverId: string, content: string) {
     const session = await auth();
     if (!session?.user?.id) return { error: "Unauthorized" };
 
-    // Verify sender and receiver are a matched coach-client pair
     const sender = await prisma.user.findUnique({
         where: { id: session.user.id },
         select: { role: true, coachId: true }
@@ -21,11 +20,31 @@ export async function sendMessage(receiverId: string, content: string) {
 
     if (!sender || !receiver) return { error: "Invalid user" };
 
-    const isPaired =
-        (sender.role === "CLIENT" && sender.coachId === receiverId) ||
-        (sender.role === "COACH" && receiver.coachId === session.user.id);
+    // Admins can message anyone.
+    // Coaches can message admins, or their assigned clients.
+    // Clients can message admins, or their assigned coach.
+    const isSenderAdmin = sender.role === "ADMIN";
+    const isReceiverAdmin = receiver.role === "ADMIN";
 
-    if (!isPaired) return { error: "You are not authorized to message this user." };
+    let isAuthorized = false;
+
+    if (isSenderAdmin) {
+        isAuthorized = true; // Admin can message anyone
+    } else if (sender.role === "COACH") {
+        if (isReceiverAdmin) {
+            isAuthorized = true; // Coach can message Admin
+        } else if (receiver.role === "CLIENT" && receiver.coachId === session.user.id) {
+            isAuthorized = true; // Coach can message their own client
+        }
+    } else if (sender.role === "CLIENT") {
+        if (isReceiverAdmin) {
+            isAuthorized = true; // Client can message Admin
+        } else if (receiver.role === "COACH" && sender.coachId === receiverId) {
+            isAuthorized = true; // Client can message their own coach
+        }
+    }
+
+    if (!isAuthorized) return { error: "You are not authorized to message this user according to your role." };
 
     try {
         await prisma.message.create({
@@ -108,20 +127,38 @@ export async function getContacts() {
         select: { role: true, coachId: true }
     });
 
-    if (currentUser?.role === "COACH") {
-        // Coach only sees their assigned clients
+    if (!currentUser) return [];
+
+    if (currentUser.role === "ADMIN") {
+        // Admin sees everyone (Coaches and Clients) exception themselves
         return await prisma.user.findMany({
-            where: { coachId: session.user.id },
-            select: { id: true, name: true, image: true, email: true }
+            where: { id: { not: session.user.id } },
+            select: { id: true, name: true, image: true, email: true, role: true }
         });
-    } else if (currentUser?.role === "CLIENT") {
-        // Client only sees their assigned coach
-        if (!currentUser.coachId) return [];
-        const coach = await prisma.user.findUnique({
-            where: { id: currentUser.coachId },
-            select: { id: true, name: true, image: true, email: true }
+    } else if (currentUser.role === "COACH") {
+        // Coach sees Admins and their assigned clients
+        return await prisma.user.findMany({
+            where: {
+                OR: [
+                    { role: "ADMIN" },
+                    { coachId: session.user.id }
+                ]
+            },
+            select: { id: true, name: true, image: true, email: true, role: true }
         });
-        return coach ? [coach] : [];
+    } else if (currentUser.role === "CLIENT") {
+        // Client sees Admins and their assigned coach
+        const conditions: any[] = [{ role: "ADMIN" }];
+        if (currentUser.coachId) {
+            conditions.push({ id: currentUser.coachId });
+        }
+
+        return await prisma.user.findMany({
+            where: {
+                OR: conditions
+            },
+            select: { id: true, name: true, image: true, email: true, role: true }
+        });
     }
 
     return [];

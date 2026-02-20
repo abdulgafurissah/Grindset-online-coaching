@@ -3,6 +3,8 @@
 import { useState } from "react";
 import Image from "next/image";
 import { Search } from "lucide-react";
+import { Program } from "@prisma/client";
+import AssignCoachProgramDialog from "./AssignCoachProgramDialog";
 
 interface Client {
     id: string;
@@ -11,9 +13,10 @@ interface Client {
     joinedAt: string;
     email: string | null;
     image: string | null;
+    program: { id: string, title: string } | null;
 }
 
-export default function ClientList({ clients }: { clients: Client[] }) {
+export default function ClientList({ clients, programs }: { clients: Client[], programs: Program[] }) {
     const [searchTerm, setSearchTerm] = useState("");
 
     const filteredClients = clients.filter(client =>
@@ -40,7 +43,9 @@ export default function ClientList({ clients }: { clients: Client[] }) {
                         <tr>
                             <th className="px-6 py-4">Client</th>
                             <th className="px-6 py-4">Status</th>
+                            <th className="px-6 py-4">Program</th>
                             <th className="px-6 py-4">Joined At</th>
+                            <th className="px-6 py-4 text-right">Actions</th>
                         </tr>
                     </thead>
                     <tbody className="divide-y divide-slate-100">
@@ -76,12 +81,22 @@ export default function ClientList({ clients }: { clients: Client[] }) {
                                         {client.status}
                                     </span>
                                 </td>
+                                <td className="px-6 py-4">
+                                    {client.program ? (
+                                        <span className="font-medium text-black-rich">{client.program.title}</span>
+                                    ) : (
+                                        <span className="text-slate-400 italic text-xs">Unassigned</span>
+                                    )}
+                                </td>
                                 <td className="px-6 py-4 text-slate-500 font-medium">{client.joinedAt}</td>
+                                <td className="px-6 py-4 text-right">
+                                    <AssignCoachProgramDialog client={client} programs={programs} />
+                                </td>
                             </tr>
                         ))}
                         {filteredClients.length === 0 && (
                             <tr>
-                                <td colSpan={3} className="px-6 py-12 text-center text-slate-400">
+                                <td colSpan={5} className="px-6 py-12 text-center text-slate-400">
                                     No clients found.
                                 </td>
                             </tr>

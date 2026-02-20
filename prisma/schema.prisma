@@ -73,11 +73,19 @@ model Profile {
   weight Float?
   goals  String?
   
+  // Health Data
+  medicalConditions String?
+  allergies        String?
+  lifestyleHabits  String?
+  anyRelevantHealthInfo String?
+  
   // Detailed Personal Info
   gender        String?
   dob           DateTime?
   nationality   String?
   phoneNumber   String?
+  whatsappNumber String?
+  emergencyContact String?
   
   // Professional Info
   specializations String[]
@@ -152,7 +160,21 @@ model Subscription {
   paypalSubscriptionId String   @unique
   status               String
   planId               String
+  plan                 PaymentPlan? @relation(fields: [planId], references: [id])
   currentPeriodEnd     DateTime
+}
+
+model PaymentPlan {
+  id               String   @id @default(cuid())
+  name             String
+  price            Float
+  interval         String   // e.g. "month", "year"
+  features         Json
+  isActive         Boolean  @default(true)
+  promoPercentage  Float    @default(0) // 0 means no promo, 50 means 50% off
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+  subscriptions    Subscription[]
 }
 
 model Application {
@@ -178,6 +200,7 @@ model Payment {
   
   coachShare    Float
   platformShare Float
+  isPaidOut     Boolean  @default(false)
   
   createdAt     DateTime @default(now())
 }

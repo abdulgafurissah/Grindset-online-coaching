@@ -30,6 +30,7 @@ const clientLinks: any[] = [];
 
 const coachLinks = [
     { href: "/dashboard/clients", label: "Clients", icon: Users },
+    { href: "/dashboard/programs", label: "My Programs", icon: Dumbbell },
     { href: "/dashboard/finances", label: "My Earnings", icon: TrendingUp },
 ];
 

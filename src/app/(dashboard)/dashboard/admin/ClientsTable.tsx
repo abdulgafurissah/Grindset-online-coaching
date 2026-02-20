@@ -2,8 +2,8 @@
 
 import { useState } from "react";
 import { User } from "@prisma/client";
-import { MoreVertical, UserCog, Loader2 } from "lucide-react";
-import { assignCoachToClient } from "@/app/actions/admin";
+import { MoreVertical, UserCog, Loader2, Ban, Trash2, CheckCircle2 } from "lucide-react";
+import { assignCoachToClient, toggleUserStatus, deleteUser } from "@/app/actions/admin";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import {
@@ -52,6 +52,41 @@ export default function ClientsTable({ clients, coaches }: ClientsTableProps) {
         }
     };
 
+    const handleToggleStatus = async (userId: string, currentStatus: boolean) => {
+        setLoadingId(userId);
+        try {
+            const result = await toggleUserStatus(userId);
+            if (result.success) {
+                setClientList(prev => prev.map(u => u.id === userId ? { ...u, isActive: !currentStatus } : u));
+                toast.success(`Client ${!currentStatus ? 'activated' : 'suspended'} successfully.`);
+            } else {
+                toast.error(result.error || "Failed to change status");
+            }
+        } catch {
+            toast.error("Error changing status");
+        } finally {
+            setLoadingId(null);
+        }
+    };
+
+    const handleDelete = async (userId: string) => {
+        if (!confirm("Are you sure you want to delete this client? This action cannot be undone.")) return;
+        setLoadingId(userId);
+        try {
+            const result = await deleteUser(userId);
+            if (result.success) {
+                setClientList(prev => prev.filter(u => u.id !== userId));
+                toast.success("Client deleted successfully.");
+            } else {
+                toast.error(result.error || "Failed to delete client");
+            }
+        } catch {
+            toast.error("Error deleting client");
+        } finally {
+            setLoadingId(null);
+        }
+    };
+
     return (
         <div className="bg-white border border-slate-200 rounded-xl shadow-sm">
             <div className="p-6 border-b border-slate-100">
@@ -71,8 +106,11 @@ export default function ClientsTable({ clients, coaches }: ClientsTableProps) {
                     </thead>
                     <tbody className="divide-y divide-slate-100">
                         {clientList.map((client) => (
-                            <tr key={client.id} className="hover:bg-slate-50 transition-colors">
-                                <td className="px-6 py-4 text-black-rich font-medium">{client.name}</td>
+                            <tr key={client.id} className={`hover:bg-slate-50 transition-colors ${!client.isActive ? 'opacity-50' : ''}`}>
+                                <td className="px-6 py-4 text-black-rich font-medium">
+                                    {client.name}
+                                    {!client.isActive && <span className="ml-2 text-xs bg-red-100 text-red-600 px-2 py-0.5 rounded-full">Suspended</span>}
+                                </td>
                                 <td className="px-6 py-4 text-slate-600">{client.email}</td>
                                 <td className="px-6 py-4 text-slate-600">{client.coach?.name || "Not Assigned"}</td>
                                 <td className="px-6 py-4 text-slate-600">{"No Program"}</td>
@@ -100,6 +138,23 @@ export default function ClientsTable({ clients, coaches }: ClientsTableProps) {
                                                     {coach.name}
                                                 </DropdownMenuItem>
                                             ))}
+                                            <DropdownMenuSeparator className="bg-slate-100" />
+                                            <DropdownMenuItem
+                                                onClick={() => handleToggleStatus(client.id, client.isActive)}
+                                                className="focus:bg-slate-100 focus:text-black-rich cursor-pointer rounded-sm text-yellow-600 focus:text-yellow-700"
+                                            >
+                                                {client.isActive ? (
+                                                    <><Ban className="mr-2 h-4 w-4" /> Suspend Client</>
+                                                ) : (
+                                                    <><CheckCircle2 className="mr-2 h-4 w-4" /> Activate Client</>
+                                                )}
+                                            </DropdownMenuItem>
+                                            <DropdownMenuItem
+                                                onClick={() => handleDelete(client.id)}
+                                                className="focus:bg-red-50 focus:text-red-700 cursor-pointer rounded-sm text-red-600"
+                                            >
+                                                <Trash2 className="mr-2 h-4 w-4" /> Delete Client
+                                            </DropdownMenuItem>
                                         </DropdownMenuContent>
                                     </DropdownMenu>
                                 </td>

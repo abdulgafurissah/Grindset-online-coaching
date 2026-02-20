@@ -11,14 +11,14 @@ export async function getAdminStats() {
     if (!session?.user?.id || (session.user as any).role !== "ADMIN") return null;
 
     try {
-        const [userCount, pendingApps, activeSubs] = await Promise.all([
+        const [userCount, pendingApps, activeSubs, completedPayments] = await Promise.all([
             prisma.user.count(),
             prisma.application.count({ where: { status: "PENDING" } }),
             prisma.subscription.count({ where: { status: "ACTIVE" } }),
+            prisma.payment.findMany({ where: { status: "COMPLETED" }, select: { amount: true } })
         ]);
 
-        // Mock revenue data for now
-        const revenue = activeSubs * 99;
+        const revenue = completedPayments.reduce((acc: number, current: { amount: number }) => acc + current.amount, 0);
 
         return {
             userCount,
@@ -67,7 +67,34 @@ export async function updateApplicationStatus(appId: string, status: "APPROVED" 
             data: { status }
         });
 
-        // ... rest of logic
+        // If approved and it's a coach application, update the user role
+        if (status === "APPROVED" && app.type === "COACH") {
+            const user = await prisma.user.findUnique({ where: { email: app.email } });
+            if (user) {
+                await prisma.user.update({
+                    where: { id: user.id },
+                    data: {
+                        role: "COACH",
+                        approvalStatus: "APPROVED"
+                    }
+                });
+
+                // Ensure a profile exists for the new coach
+                const profile = await prisma.profile.findUnique({ where: { userId: user.id } });
+                if (!profile) {
+                    await prisma.profile.create({
+                        data: {
+                            userId: user.id,
+                            specialty: "General Coach",
+                            commissionRate: 0.8,
+                            bio: "New Coach",
+                            qualification: "Pending Verification",
+                            rating: 5.0
+                        }
+                    });
+                }
+            }
+        }
 
         revalidatePath("/dashboard/admin");
         return { success: true };
@@ -115,6 +142,24 @@ export async function toggleUserStatus(userId: string) {
     } catch (error) {
         console.error("Failed to toggle user status:", error);
         return { error: "Failed to toggle user status" };
+    }
+}
+
+export async function deleteUser(userId: string) {
+    const session = await auth();
+    if (!session?.user?.id || (session.user as any).role !== "ADMIN") return { error: "Unauthorized" };
+
+    try {
+        await prisma.user.delete({
+            where: { id: userId }
+        });
+
+        revalidatePath("/dashboard/admin");
+        revalidatePath("/dashboard/admin/clients");
+        return { success: true };
+    } catch (error) {
+        console.error("Failed to delete user:", error);
+        return { error: "Failed to delete user" };
     }
 }
 
@@ -211,6 +256,41 @@ export async function createProgram(data: { title: string; description?: string;
     }
 }
 
+export async function updateProgram(programId: string, data: { title: string; description?: string; link: string }) {
+    const session = await auth();
+    if (!session?.user?.id || (session.user as any).role !== "ADMIN") return { error: "Unauthorized" };
+
+    try {
+        await prisma.program.update({
+            where: { id: programId },
+            data,
+        });
+
+        revalidatePath("/dashboard/admin");
+        return { success: true };
+    } catch (error) {
+        console.error("Failed to update program:", error);
+        return { error: "Failed to update program" };
+    }
+}
+
+export async function deleteProgram(programId: string) {
+    const session = await auth();
+    if (!session?.user?.id || (session.user as any).role !== "ADMIN") return { error: "Unauthorized" };
+
+    try {
+        await prisma.program.delete({
+            where: { id: programId },
+        });
+
+        revalidatePath("/dashboard/admin");
+        return { success: true };
+    } catch (error) {
+        console.error("Failed to delete program:", error);
+        return { error: "Failed to delete program" };
+    }
+}
+
 export async function getClientById(id: string) {
     const session = await auth();
     if (!session?.user?.id || (session.user as any).role !== "ADMIN") return null;
@@ -271,5 +351,36 @@ export async function unassignProgramFromClient(userId: string, programId: strin
     } catch (error) {
         console.error("Failed to unassign program:", error);
         return { error: "Failed to unassign program" };
+    }
+}
+
+export async function updateClientProfile(userId: string, data: any) {
+    const session = await auth();
+    if (!session?.user?.id || (session.user as any).role !== "ADMIN") return { error: "Unauthorized" };
+
+    try {
+        await prisma.profile.update({
+            where: { userId },
+            data: {
+                ...data,
+                // Ensure dates/numbers are parsed correctly if present
+                weight: data.weight ? parseFloat(data.weight) : undefined,
+                height: data.height ? parseFloat(data.height) : undefined,
+            }
+        });
+
+        // Also update the name on the User model if provided
+        if (data.name) {
+            await prisma.user.update({
+                where: { id: userId },
+                data: { name: data.name }
+            });
+        }
+
+        revalidatePath(`/dashboard/admin/clients/${userId}`);
+        return { success: true };
+    } catch (error) {
+        console.error("Failed to update profile:", error);
+        return { error: "Failed to update profile" };
     }
 }

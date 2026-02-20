@@ -1,9 +1,13 @@
 import { getAdminStats, getApplications, getAdminUsers, getAvailableCoaches, getClients, getPrograms } from "@/app/actions/admin";
+import { getAdminPayments, getSubscriptions, getPaymentPlans } from "@/app/actions/finance";
 import { CheckCircle, Clock, DollarSign, Users } from "lucide-react";
 import ApplicationsTable from "./ApplicationsTable";
 import UsersTable from "./UsersTable";
 import ClientsTable from "./ClientsTable";
 import ProgramsTable from "./ProgramsTable";
+import PaymentsTable from "./finances/PaymentsTable";
+import SubscriptionsTable from "./finances/SubscriptionsTable";
+import PaymentPlansTable from "./finances/PaymentPlansTable";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 export default async function AdminPage() {
@@ -13,6 +17,9 @@ export default async function AdminPage() {
     const coaches = await getAvailableCoaches();
     const clients = await getClients();
     const programs = await getPrograms();
+    const payments = await getAdminPayments();
+    const subscriptions = await getSubscriptions();
+    const plans = await getPaymentPlans(true);
 
     if (!stats) return <div className="p-8 text-black-rich">Access Denied</div>;
 
@@ -59,6 +66,9 @@ export default async function AdminPage() {
                     <TabsTrigger value="programs" className="data-[state=active]:bg-brand data-[state=active]:text-white text-slate-600 rounded-md px-6">
                         Program Management
                     </TabsTrigger>
+                    <TabsTrigger value="finances" className="data-[state=active]:bg-brand data-[state=active]:text-white text-slate-600 rounded-md px-6 font-bold">
+                        Finances
+                    </TabsTrigger>
                 </TabsList>
 
                 <TabsContent value="applications">
@@ -75,6 +85,20 @@ export default async function AdminPage() {
 
                 <TabsContent value="programs">
                     <ProgramsTable programs={programs} />
+                </TabsContent>
+
+                <TabsContent value="finances" className="space-y-8">
+                    <div>
+                        <PaymentPlansTable plans={plans as any} />
+                    </div>
+                    <div>
+                        <h2 className="text-xl font-bold text-black-rich mb-4">Payment History</h2>
+                        <PaymentsTable payments={payments} />
+                    </div>
+                    <div>
+                        <h2 className="text-xl font-bold text-black-rich mb-4">Active Subscriptions</h2>
+                        <SubscriptionsTable subscriptions={subscriptions} />
+                    </div>
                 </TabsContent>
             </Tabs>
         </div>

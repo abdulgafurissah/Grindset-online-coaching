@@ -11,14 +11,24 @@ const RegisterSchema = z.object({
     name: z.string().min(1, "Name is required"),
     email: z.string().email("Invalid email address"),
     password: z.string().min(6, "Password must be at least 6 characters"),
+    gender: z.string().optional(),
+    dob: z.string().optional(),
+    phoneNumber: z.string().optional(),
+    nationality: z.string().optional(),
+    whatsappNumber: z.string().optional(),
+    emergencyContact: z.string().optional(),
+    weight: z.string().optional(),
+    height: z.string().optional(),
+    medicalConditions: z.string().optional(),
+    allergies: z.string().optional(),
+    goals: z.string().optional(),
+    lifestyleHabits: z.string().optional(),
+    anyRelevantHealthInfo: z.string().optional(),
 });
 
 export async function registerUser(formData: FormData) {
-    const validatedFields = RegisterSchema.safeParse({
-        name: formData.get("name"),
-        email: formData.get("email"),
-        password: formData.get("password"),
-    });
+    const data = Object.fromEntries(formData.entries());
+    const validatedFields = RegisterSchema.safeParse(data);
 
     if (!validatedFields.success) {
         return { error: "Invalid fields" };
@@ -43,6 +53,23 @@ export async function registerUser(formData: FormData) {
                 email,
                 password: hashedPassword,
                 role: "CLIENT", // Default role
+                profile: {
+                    create: {
+                        gender: validatedFields.data.gender || null,
+                        dob: validatedFields.data.dob ? new Date(validatedFields.data.dob) : null,
+                        phoneNumber: validatedFields.data.phoneNumber || null,
+                        nationality: validatedFields.data.nationality || null,
+                        whatsappNumber: validatedFields.data.whatsappNumber || null,
+                        emergencyContact: validatedFields.data.emergencyContact || null,
+                        weight: validatedFields.data.weight ? parseFloat(validatedFields.data.weight) : null,
+                        height: validatedFields.data.height ? parseFloat(validatedFields.data.height) : null,
+                        medicalConditions: validatedFields.data.medicalConditions || null,
+                        allergies: validatedFields.data.allergies || null,
+                        goals: validatedFields.data.goals || null,
+                        lifestyleHabits: validatedFields.data.lifestyleHabits || null,
+                        anyRelevantHealthInfo: validatedFields.data.anyRelevantHealthInfo || null,
+                    }
+                }
             },
         });
 

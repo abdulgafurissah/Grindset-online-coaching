@@ -195,6 +195,123 @@ export default function RegisterPage() {
                                         className="flex h-11 w-full rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm text-black-rich ring-offset-white file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-slate-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
                                     />
                                 </div>
+                                <div className="grid gap-2">
+                                    <label className="text-sm font-medium leading-none text-black-rich" htmlFor="whatsappNumber">
+                                        WhatsApp Number
+                                    </label>
+                                    <input
+                                        id="whatsappNumber"
+                                        name="whatsappNumber"
+                                        type="tel"
+                                        placeholder="+1234567890"
+                                        disabled={isLoading}
+                                        className="flex h-11 w-full rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm text-black-rich ring-offset-white file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-slate-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+                                    />
+                                </div>
+                                <div className="grid gap-2">
+                                    <label className="text-sm font-medium leading-none text-black-rich" htmlFor="emergencyContact">
+                                        Emergency Contact (Name & Phone)
+                                    </label>
+                                    <input
+                                        id="emergencyContact"
+                                        name="emergencyContact"
+                                        type="text"
+                                        placeholder="Jane Doe - +1234567890"
+                                        required
+                                        disabled={isLoading}
+                                        className="flex h-11 w-full rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm text-black-rich ring-offset-white file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-slate-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+                                    />
+                                </div>
+                                <div className="grid grid-cols-2 gap-4">
+                                    <div className="grid gap-2">
+                                        <label className="text-sm font-medium leading-none text-black-rich" htmlFor="weight">
+                                            Weight (kg)
+                                        </label>
+                                        <input
+                                            id="weight"
+                                            name="weight"
+                                            type="number"
+                                            step="0.1"
+                                            placeholder="75.5"
+                                            disabled={isLoading}
+                                            className="flex h-11 w-full rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm text-black-rich ring-offset-white file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-slate-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+                                        />
+                                    </div>
+                                    <div className="grid gap-2">
+                                        <label className="text-sm font-medium leading-none text-black-rich" htmlFor="height">
+                                            Height (cm)
+                                        </label>
+                                        <input
+                                            id="height"
+                                            name="height"
+                                            type="number"
+                                            step="0.1"
+                                            placeholder="180"
+                                            disabled={isLoading}
+                                            className="flex h-11 w-full rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm text-black-rich ring-offset-white file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-slate-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+                                        />
+                                    </div>
+                                </div>
+                                <div className="grid gap-2">
+                                    <label className="text-sm font-medium leading-none text-black-rich" htmlFor="medicalConditions">
+                                        Medical Conditions
+                                    </label>
+                                    <textarea
+                                        id="medicalConditions"
+                                        name="medicalConditions"
+                                        placeholder="List any medical conditions..."
+                                        disabled={isLoading}
+                                        className="flex min-h-[60px] w-full rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm text-black-rich ring-offset-white placeholder:text-slate-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 resize-y"
+                                    />
+                                </div>
+                                <div className="grid gap-2">
+                                    <label className="text-sm font-medium leading-none text-black-rich" htmlFor="allergies">
+                                        Allergies
+                                    </label>
+                                    <textarea
+                                        id="allergies"
+                                        name="allergies"
+                                        placeholder="List any food or medication allergies..."
+                                        disabled={isLoading}
+                                        className="flex min-h-[60px] w-full rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm text-black-rich ring-offset-white placeholder:text-slate-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 resize-y"
+                                    />
+                                </div>
+                                <div className="grid gap-2">
+                                    <label className="text-sm font-medium leading-none text-black-rich" htmlFor="goals">
+                                        Fitness Goals
+                                    </label>
+                                    <textarea
+                                        id="goals"
+                                        name="goals"
+                                        placeholder="What do you want to achieve?"
+                                        disabled={isLoading}
+                                        className="flex min-h-[60px] w-full rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm text-black-rich ring-offset-white placeholder:text-slate-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 resize-y"
+                                    />
+                                </div>
+                                <div className="grid gap-2">
+                                    <label className="text-sm font-medium leading-none text-black-rich" htmlFor="lifestyleHabits">
+                                        Lifestyle Habits
+                                    </label>
+                                    <textarea
+                                        id="lifestyleHabits"
+                                        name="lifestyleHabits"
+                                        placeholder="Sleep, diet, stress levels, smoking/drinking habits..."
+                                        disabled={isLoading}
+                                        className="flex min-h-[60px] w-full rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm text-black-rich ring-offset-white placeholder:text-slate-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 resize-y"
+                                    />
+                                </div>
+                                <div className="grid gap-2">
+                                    <label className="text-sm font-medium leading-none text-black-rich" htmlFor="anyRelevantHealthInfo">
+                                        Any Other Relevant Health Info
+                                    </label>
+                                    <textarea
+                                        id="anyRelevantHealthInfo"
+                                        name="anyRelevantHealthInfo"
+                                        placeholder="Anything else your coach should know..."
+                                        disabled={isLoading}
+                                        className="flex min-h-[60px] w-full rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm text-black-rich ring-offset-white placeholder:text-slate-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 resize-y"
+                                    />
+                                </div>
                                 <button
                                     disabled={isLoading}
                                     type="submit"

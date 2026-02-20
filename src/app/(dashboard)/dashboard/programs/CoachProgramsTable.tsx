@@ -1,21 +1,23 @@
+"use client";
+
 import { Program } from "@prisma/client";
-import CreateProgramForm from "./CreateProgramForm";
-import EditProgramDialog from "./EditProgramDialog";
+import CreateCoachProgramForm from "./CreateCoachProgramForm";
+import EditCoachProgramDialog from "./EditCoachProgramDialog";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 import { Trash2 } from "lucide-react";
-import { deleteProgram } from "@/app/actions/admin";
+import { deleteCoachProgram } from "@/app/actions/coach";
 
-interface ProgramsTableProps {
+interface CoachProgramsTableProps {
     programs: Program[];
 }
 
-export default function ProgramsTable({ programs }: ProgramsTableProps) {
+export default function CoachProgramsTable({ programs }: CoachProgramsTableProps) {
     const handleDelete = async (programId: string) => {
         if (!confirm("Are you sure you want to delete this program?")) return;
 
         try {
-            const result = await deleteProgram(programId);
+            const result = await deleteCoachProgram(programId);
             if (result.success) {
                 toast.success("Program deleted successfully");
             } else {
@@ -30,10 +32,10 @@ export default function ProgramsTable({ programs }: ProgramsTableProps) {
         <div className="bg-white border border-slate-200 rounded-xl shadow-sm">
             <div className="p-6 border-b border-slate-100 flex justify-between items-center">
                 <div>
-                    <h2 className="text-xl font-bold text-black-rich">Programs</h2>
-                    <p className="text-slate-500">Manage your programs.</p>
+                    <h2 className="text-xl font-bold text-black-rich">Active Programs</h2>
+                    <p className="text-slate-500">Your custom training and nutrition plans.</p>
                 </div>
-                <CreateProgramForm />
+                <CreateCoachProgramForm />
             </div>
             <div className="overflow-x-auto">
                 <table className="w-full text-left text-sm">
@@ -46,14 +48,24 @@ export default function ProgramsTable({ programs }: ProgramsTableProps) {
                         </tr>
                     </thead>
                     <tbody className="divide-y divide-slate-100">
-                        {programs.map((program) => (
+                        {programs.length === 0 ? (
+                            <tr>
+                                <td colSpan={4} className="px-6 py-8 text-center text-slate-500 select-none">
+                                    You haven't created any programs yet.
+                                </td>
+                            </tr>
+                        ) : programs.map((program) => (
                             <tr key={program.id} className="hover:bg-slate-50 transition-colors">
                                 <td className="px-6 py-4 text-black-rich font-medium">{program.title}</td>
-                                <td className="px-6 py-4 text-slate-600">{program.description}</td>
-                                <td className="px-6 py-4 text-slate-600">{program.link}</td>
+                                <td className="px-6 py-4 text-slate-600 max-w-xs truncate">{program.description || "-"}</td>
+                                <td className="px-6 py-4 text-slate-600 truncate max-w-[200px]">
+                                    <a href={program.link} target="_blank" rel="noopener noreferrer" className="text-brand hover:underline">
+                                        {program.link}
+                                    </a>
+                                </td>
                                 <td className="px-6 py-4 text-right">
                                     <div className="flex justify-end pr-2 gap-2">
-                                        <EditProgramDialog program={program} />
+                                        <EditCoachProgramDialog program={program} />
                                         <Button
                                             variant="ghost"
                                             size="sm"

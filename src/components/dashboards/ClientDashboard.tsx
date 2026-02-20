@@ -12,16 +12,33 @@ import prisma from "@/lib/prisma";
 export async function ClientDashboard({ user }: { user?: any }) {
     if (!user?.id) return null;
 
-    const [programs, clientData] = await Promise.all([
-        getPrograms(),
-        prisma.user.findUnique({
-            where: { id: user.id },
-            include: { coach: { select: { name: true, email: true, image: true } } }
-        })
-    ]);
+    const clientData = await prisma.user.findUnique({
+        where: { id: user.id },
+        include: {
+            coach: { select: { id: true, name: true, email: true, image: true } },
+            programs: true // Fetch explicitly assigned programs
+        }
+    });
 
     const firstName = clientData?.name?.split(" ")[0] || "Athlete";
     const coach = clientData?.coach;
+
+    let displayPrograms = clientData?.programs || [];
+
+    // If the client has no coach and no explicitly assigned programs, fetch general admin programs
+    if (!coach && displayPrograms.length === 0) {
+        // Find general programs created by any ADMIN
+        const admins = await prisma.user.findMany({ where: { role: "ADMIN" }, select: { id: true } });
+        const adminIds = admins.map((a: { id: string }) => a.id);
+
+        displayPrograms = await prisma.program.findMany({
+            where: {
+                creatorId: { in: adminIds }
+            },
+            orderBy: { createdAt: 'desc' },
+            take: 4 // Limit general programs shown
+        });
+    }
 
     return (
         <div className="p-6 max-w-7xl mx-auto space-y-8">
@@ -44,13 +61,15 @@ export async function ClientDashboard({ user }: { user?: any }) {
                     {/* Featured Programs Section - Primary Focus */}
                     <div>
                         <div className="flex items-center justify-between mb-4">
-                            <h2 className="text-2xl font-bold text-black-rich">Your Programs</h2>
-                            <span className="text-sm font-bold text-brand">{programs.length} Available</span>
+                            <h2 className="text-2xl font-bold text-black-rich">
+                                {coach ? "Your Assigned Programs" : "General Programs"}
+                            </h2>
+                            <span className="text-sm font-bold text-brand">{displayPrograms.length} Available</span>
                         </div>
 
-                        {programs.length > 0 ? (
+                        {displayPrograms.length > 0 ? (
                             <div className="grid md:grid-cols-2 gap-6">
-                                {programs.map((program: any) => (
+                                {displayPrograms.map((program: any) => (
                                     <div key={program.id} className="bg-white border border-slate-200 rounded-xl overflow-hidden hover:shadow-lg transition-all group flex flex-col">
                                         <div className="h-48 bg-slate-100 relative overflow-hidden">
                                             {program.image ? (
