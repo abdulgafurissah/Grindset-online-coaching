@@ -13,7 +13,7 @@ export async function getCoachClients() {
     // Only return clients assigned to this coach
     const clients = await prisma.user.findMany({
         where: { coachId: session.user.id },
-        include: { programs: { select: { id: true, title: true } } },
+        include: { assignedPrograms: { select: { id: true, title: true } } },
         orderBy: { createdAt: 'desc' }
     });
 
@@ -24,7 +24,7 @@ export async function getCoachClients() {
         image: client.image,
         status: client.isActive ? "Active" : "Inactive",
         joinedAt: client.createdAt.toLocaleDateString(),
-        program: client.programs?.[0] || null, // Assume single program per client
+        program: client.assignedPrograms?.[0] || null, // Assume single program per client
     }));
 }
 

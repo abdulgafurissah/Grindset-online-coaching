@@ -19,10 +19,7 @@ export default async function ClientDetailsPage({ params }: { params: { id: stri
         where: { id: params.id },
         include: {
             profile: true,
-            assignments: {
-                where: { status: "ACTIVE" },
-                include: { program: true }
-            },
+            assignedPrograms: true,
             progress: {
                 orderBy: { date: 'desc' }
             }
@@ -40,7 +37,7 @@ export default async function ClientDetailsPage({ params }: { params: { id: stri
     const workoutLogs = client.progress.filter((log: any) => log.metrics?.type === "WORKOUT_COMPLETION");
     const weightLogs = client.progress.filter((log: any) => log.metrics?.weight).slice(0, 10); // Last 10 weight entries
 
-    const activeProgram = client.assignments[0]?.program;
+    const activeProgram = client.assignedPrograms[0];
     const totalWorkouts = workoutLogs.length;
     const lastWorkout = workoutLogs[0] ? new Date(workoutLogs[0].date).toLocaleDateString() : "N/A";
 
