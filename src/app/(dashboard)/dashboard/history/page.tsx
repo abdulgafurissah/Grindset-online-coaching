@@ -3,6 +3,7 @@ import prisma from "@/lib/prisma";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { ArrowLeft } from "lucide-react";
+import { Progress } from "@prisma/client";
 
 export default async function HistoryPage() {
     const session = await auth();
@@ -43,7 +44,7 @@ export default async function HistoryPage() {
                                 </tr>
                             </thead>
                             <tbody className="divide-y divide-slate-100">
-                                {logs.map((log) => {
+                                {logs.map((log: Progress) => {
                                     const metrics = log.metrics as any;
                                     return (
                                         <tr key={log.id} className="hover:bg-slate-50 transition-colors">
