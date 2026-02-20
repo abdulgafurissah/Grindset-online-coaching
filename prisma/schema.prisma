@@ -61,6 +61,7 @@ model User {
   consultationsAsClient Consultation[] @relation("ClientConsultations")
   
   progress      Progress[]
+  assignedPrograms Program[] @relation("AssignedPrograms")
 }
 
 
@@ -192,6 +193,7 @@ model Program {
   isActive    Boolean  @default(true)
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
+  users       User[]   @relation("AssignedPrograms")
 }
 
 
