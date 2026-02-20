@@ -3,6 +3,7 @@
 
 import prisma from "@/lib/prisma";
 import { auth } from "@/auth";
+import { revalidatePath } from "next/cache";
 
 export async function getCoachDashboardStats() {
     const session = await auth();
@@ -97,4 +98,60 @@ export async function getClientDashboardStats() {
         currentWeight: (weightLogs[0]?.metrics as any)?.weight || null,
         consultations
     };
+}
+
+export async function logWorkout(formData: FormData) {
+    const session = await auth();
+    if (!session?.user?.id) return { success: false, error: "Unauthorized" };
+
+    const title = (formData.get("title") as string)?.trim();
+    const durationRaw = formData.get("duration") as string;
+    const dateRaw = formData.get("date") as string;
+    const notes = (formData.get("notes") as string)?.trim();
+    const weightRaw = formData.get("weight") as string;
+    const bodyFatRaw = formData.get("bodyFat") as string;
+
+    if (!title) {
+        return { success: false, error: "Workout title is required" };
+    }
+
+    const duration = durationRaw ? Number(durationRaw) : null;
+    const weight = weightRaw ? Number(weightRaw) : null;
+    const bodyFat = bodyFatRaw ? Number(bodyFatRaw) : null;
+
+    if (duration !== null && (Number.isNaN(duration) || duration < 0)) {
+        return { success: false, error: "Invalid duration" };
+    }
+
+    if (weight !== null && (Number.isNaN(weight) || weight <= 0)) {
+        return { success: false, error: "Invalid weight" };
+    }
+
+    if (bodyFat !== null && (Number.isNaN(bodyFat) || bodyFat < 0)) {
+        return { success: false, error: "Invalid body fat percentage" };
+    }
+
+    const entryDate = dateRaw ? new Date(dateRaw) : new Date();
+    if (Number.isNaN(entryDate.getTime())) {
+        return { success: false, error: "Invalid date" };
+    }
+
+    await prisma.progress.create({
+        data: {
+            userId: session.user.id,
+            date: entryDate,
+            metrics: {
+                type: "WORKOUT_COMPLETION",
+                title,
+                duration: duration ?? undefined,
+                notes: notes || undefined,
+                weight: weight ?? undefined,
+                bodyFat: bodyFat ?? undefined,
+            },
+        },
+    });
+
+    revalidatePath("/dashboard");
+    revalidatePath("/dashboard/clients");
+    return { success: true };
 }

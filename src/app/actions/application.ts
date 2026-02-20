@@ -1,6 +1,6 @@
 "use server";
 
-// import prisma from "@/lib/prisma";
+import prisma from "@/lib/prisma";
 import { revalidatePath } from "next/cache";
 
 export async function submitApplication(formData: FormData) {
@@ -14,17 +14,14 @@ export async function submitApplication(formData: FormData) {
     }
 
     try {
-        // Mocked DB call for now until DB is connected
-        // await prisma.application.create({
-        //   data: {
-        //     name,
-        //     email,
-        //     type,
-        //     details: { message: details },
-        //   },
-        // });
-
-        console.log(`[APPLICATION] New ${type} application from: ${email}`);
+        await prisma.application.create({
+            data: {
+                name,
+                email,
+                type,
+                details: details ? { message: details } : null,
+            },
+        });
 
         revalidatePath("/dashboard/admin");
         return { success: true };

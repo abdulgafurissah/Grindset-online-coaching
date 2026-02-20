@@ -45,7 +45,7 @@ export function BookConsultationDialog({ coachId, coachName }: BookConsultationD
     return (
         <Dialog open={open} onOpenChange={setOpen}>
             <DialogTrigger asChild>
-                <Button variant="outline" className="w-full bg-white text-black-rich border-slate-200 hover:bg-slate-50 font-bold">
+                <Button variant="outline" className="w-full bg-white text-black-rich border-brand/20 hover:bg-brand/10 hover:border-brand font-bold transition-all">
                     Book Free Consultation
                 </Button>
             </DialogTrigger>

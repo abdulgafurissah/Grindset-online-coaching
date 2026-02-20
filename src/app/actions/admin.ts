@@ -14,7 +14,7 @@ export async function getAdminStats() {
         const [userCount, pendingApps, activeSubs] = await Promise.all([
             prisma.user.count(),
             prisma.application.count({ where: { status: "PENDING" } }),
-            prisma.subscription.count({ where: { status: "active" } }),
+            prisma.subscription.count({ where: { status: "ACTIVE" } }),
         ]);
 
         // Mock revenue data for now

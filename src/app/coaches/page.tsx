@@ -4,6 +4,7 @@ import Image from "next/image";
 import { getCoaches } from "@/app/actions/coach-public";
 import { JoinAsCoachCTA } from "@/components/JoinAsCoachCTA";
 import { BookConsultationDialog } from "@/components/BookConsultationDialog";
+import { SelectCoachButton } from "@/components/SelectCoachButton";
 
 export default async function CoachesPage() {
     const coaches = await getCoaches();
@@ -73,9 +74,7 @@ export default async function CoachesPage() {
                                     </div>
 
                                     <div className="space-y-3">
-                                        <a href={`/register?coach=${coach.id}&type=subscription`} className="block w-full py-3 bg-black-rich hover:bg-brand text-white text-center font-bold uppercase text-sm tracking-widest rounded-lg transition-colors">
-                                            Train with {coach.name?.split(" ")[0]}
-                                        </a>
+                                        <SelectCoachButton coachId={coach.id} coachName={coach.name?.split(" ")[0] || "Coach"} />
                                         <BookConsultationDialog coachId={coach.id} coachName={coach.name || "Coach"} />
                                     </div>
                                 </div>
