@@ -9,7 +9,7 @@ export async function getCoachDashboardStats() {
     const session = await auth();
     if (!session?.user?.id) return null;
 
-    const [activeClients, totalRevenue, pendingApps, pendingConsultations] = await Promise.all([
+    const [activeClients, totalRevenue, activePrograms, pendingConsultations] = await Promise.all([
         // Only count clients assigned to this coach
         prisma.user.count({
             where: {
@@ -26,9 +26,10 @@ export async function getCoachDashboardStats() {
                 status: "COMPLETED"
             }
         }),
-        prisma.application.count({
+        prisma.program.count({
             where: {
-                status: "PENDING"
+                creatorId: session.user.id,
+                isActive: true
             }
         }),
         prisma.consultation.findMany({
@@ -48,7 +49,7 @@ export async function getCoachDashboardStats() {
     return {
         activeClients,
         monthlyRevenue: totalRevenue._sum.coachShare || 0,
-        pendingApps,
+        activePrograms,
         pendingConsultations
     };
 }

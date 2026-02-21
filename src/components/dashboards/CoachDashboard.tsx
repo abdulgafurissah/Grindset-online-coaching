@@ -1,4 +1,5 @@
-import { Users, DollarSign, TrendingUp, CheckCircle, Clock } from "lucide-react";
+import { Users, DollarSign, TrendingUp, CheckCircle, Clock, Dumbbell, ArrowRight } from "lucide-react";
+import Link from "next/link";
 import { getCoachDashboardStats } from "@/app/actions/dashboard";
 import { formatCurrency } from "@/lib/utils";
 
@@ -22,11 +23,11 @@ export async function CoachDashboard() {
                 <Card title="Active Clients" value={stats.activeClients.toString()} icon={Users} change="" isPositive />
                 <Card title="Monthly Revenue" value={formatCurrency(stats.monthlyRevenue)} icon={DollarSign} change="" isPositive />
                 <Card
-                    title="Action Items"
-                    value={(stats.pendingApps + stats.pendingConsultations.length).toString()}
-                    icon={CheckCircle}
-                    change="Items needing attention"
-                    isPositive={false}
+                    title="Active Programs"
+                    value={stats.activePrograms.toString()}
+                    icon={Dumbbell}
+                    change="Published workouts"
+                    isPositive={true}
                 />
             </div>
 
@@ -70,15 +71,19 @@ export async function CoachDashboard() {
                     </div>
                 </div>
 
-                <div className="rounded-xl border border-slate-200 bg-white p-6 shadow-sm">
-                    <h3 className="mb-4 text-xl font-bold text-black-rich">Action Items</h3>
-                    <div className="text-slate-400 text-sm">
-                        {stats.pendingApps > 0 && (
-                            <p className="text-brand font-bold mb-2">You have {stats.pendingApps} pending coach application(s).</p>
-                        )}
-                        {stats.pendingApps === 0 && stats.pendingConsultations.length === 0 && (
-                            <p>No pending actions.</p>
-                        )}
+                <div className="rounded-xl border border-slate-200 bg-white p-6 shadow-sm flex flex-col">
+                    <h3 className="mb-4 text-xl font-bold text-black-rich flex items-center gap-2">
+                        <Dumbbell className="h-5 w-5 text-brand" />
+                        Program Management
+                    </h3>
+                    <div className="flex-1 flex flex-col justify-center gap-4 text-slate-500 text-sm">
+                        <p>You have <strong className="text-black-rich">{stats.activePrograms}</strong> active programs available for your clients.</p>
+                        <p>Create generic or specialized workout plans, link your instructional videos, and assign them directly to your athletes.</p>
+                    </div>
+                    <div className="mt-6 pt-6 border-t border-slate-100">
+                        <Link href="/dashboard/programs" className="w-full flex items-center justify-center gap-2 py-3 bg-black-rich text-white font-bold rounded-lg hover:bg-brand transition-colors text-sm uppercase tracking-wide">
+                            Manage Programs <ArrowRight className="w-4 h-4" />
+                        </Link>
                     </div>
                 </div>
             </div>
