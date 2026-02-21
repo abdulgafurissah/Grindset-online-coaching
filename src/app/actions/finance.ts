@@ -237,9 +237,24 @@ export async function getCoachFinancialStats() {
 
 export async function getPaymentPlans(includeInactive = false) {
     try {
-        return await prisma.paymentPlan.findMany({
+        const plans = await prisma.paymentPlan.findMany({
             where: includeInactive ? {} : { isActive: true },
             orderBy: { price: 'asc' }
+        });
+
+        return plans.map((plan: any) => {
+            let featuresArray = plan.features;
+            if (typeof plan.features === 'string') {
+                try {
+                    featuresArray = JSON.parse(plan.features);
+                } catch (e) {
+                    featuresArray = [];
+                }
+            }
+            return {
+                ...plan,
+                features: Array.isArray(featuresArray) ? featuresArray : []
+            };
         });
     } catch (error) {
         console.error("Failed to fetch payment plans:", error);
@@ -257,7 +272,7 @@ export async function createPaymentPlan(data: { name: string, price: number, int
                 name: data.name,
                 price: data.price,
                 interval: data.interval,
-                features: JSON.stringify(data.features),
+                features: data.features,
                 isActive: data.isActive,
                 promoPercentage: data.promoPercentage
             }
@@ -276,7 +291,7 @@ export async function updatePaymentPlan(id: string, data: { name?: string, price
 
     try {
         const updateData: any = { ...data };
-        if (data.features) updateData.features = JSON.stringify(data.features);
+        if (data.features) updateData.features = data.features;
 
         await prisma.paymentPlan.update({
             where: { id },

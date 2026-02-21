@@ -37,7 +37,7 @@ export default function PaymentPlanDialog({ plan }: { plan?: PaymentPlan }) {
         const formData = new FormData(e.currentTarget);
         const data = {
             name: formData.get("name") as string,
-            price: parseFloat(formData.get("price") as string),
+            price: parseFloat(formData.get("price") as string) || 0,
             interval: formData.get("interval") as string,
             features: features.filter(f => f.trim() !== ""),
             isActive: formData.get("isActive") === "on",
@@ -112,20 +112,19 @@ export default function PaymentPlanDialog({ plan }: { plan?: PaymentPlan }) {
                                 <option value="year">Yearly</option>
                             </select>
                         </div>
-                        <div className="space-y-2 col-span-2">
-                            <label className="text-sm font-medium">Promo Percentage (%)</label>
-                            <p className="text-xs text-slate-500 mb-1">Set to 0 for no discount. Set to 100 for a free plan.</p>
+                        <div className="space-y-2">
+                            <label className="text-sm font-medium">Promo (%)</label>
                             <select
                                 name="promoPercentage"
                                 defaultValue={plan?.promoPercentage || 0}
                                 className="flex h-10 w-full rounded-md border border-slate-200 bg-white px-3 py-2 text-sm"
                             >
-                                <option value={0}>0% (No Discount)</option>
+                                <option value={0}>0% (No Promo)</option>
                                 <option value={5}>5% Off</option>
                                 <option value={10}>10% Off</option>
                                 <option value={20}>20% Off</option>
                                 <option value={50}>50% Off</option>
-                                <option value={100}>100% Off (Free Tier)</option>
+                                <option value={100}>100% Off (Free)</option>
                             </select>
                         </div>
                     </div>
