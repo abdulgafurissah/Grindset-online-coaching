@@ -16,14 +16,14 @@ export async function ClientDashboard({ user }: { user?: any }) {
         where: { id: user.id },
         include: {
             coach: { select: { id: true, name: true, email: true, image: true } },
-            programs: true // Fetch explicitly assigned programs
+            assignedPrograms: true // Fetch explicitly assigned programs
         }
     });
 
     const firstName = clientData?.name?.split(" ")[0] || "Athlete";
     const coach = clientData?.coach;
 
-    let displayPrograms = clientData?.programs || [];
+    let displayPrograms = clientData?.assignedPrograms || [];
 
     // If the client has no coach and no explicitly assigned programs, fetch general admin programs
     if (!coach && displayPrograms.length === 0) {
