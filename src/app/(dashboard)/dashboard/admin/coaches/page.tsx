@@ -60,9 +60,11 @@ export default async function AdminCoachesPage() {
 
                 {coaches.length === 0 && (
                     <div className="col-span-full text-center py-12 border-2 border-dashed border-slate-200 rounded-xl bg-slate-50">
-                        <p className="text-slate-500 mb-4">No coaches found.</p>
+                        <p className="text-slate-500 mb-4 font-medium">No coaches found.</p>
                         <Link href="/dashboard/admin/coaches/new">
-                            <Button variant="outline">Create your first coach</Button>
+                            <Button variant="outline" className="border-slate-300 text-black-rich bg-white hover:bg-slate-100 hover:text-black">
+                                Create your first coach
+                            </Button>
                         </Link>
                     </div>
                 )}
