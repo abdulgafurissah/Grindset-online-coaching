@@ -63,7 +63,7 @@ export default async function AdminPage() {
                         User Management
                     </TabsTrigger>
                     <TabsTrigger value="consultations" className="data-[state=active]:bg-brand data-[state=active]:text-white text-slate-600 rounded-md px-6">
-                        Consultations {consultations.filter(c => c.status === "PENDING").length > 0 && `(${consultations.filter(c => c.status === "PENDING").length})`}
+                        Consultations {consultations.filter((c: any) => c.status === "PENDING").length > 0 && `(${consultations.filter((c: any) => c.status === "PENDING").length})`}
                     </TabsTrigger>
                     <TabsTrigger value="clients" className="data-[state=active]:bg-brand data-[state=active]:text-white text-slate-600 rounded-md px-6">
                         Client Management
