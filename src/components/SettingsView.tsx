@@ -1,8 +1,10 @@
 "use client";
 
 import { useState } from "react";
-import { User, Lock, Bell, CreditCard, Save, Check, AlertTriangle } from "lucide-react";
+import { User, Lock, Bell, CreditCard, Save, Check, AlertTriangle, Loader2 } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { toast } from "sonner";
+import { updateUserProfile } from "@/app/actions/user";
 
 type Tab = "profile" | "security" | "notifications" | "billing";
 
@@ -30,8 +32,8 @@ export function SettingsView({ user }: { user: any }) {
                             className={cn(
                                 "w-full flex items-center gap-3 px-4 py-3 rounded-md transition-colors text-left",
                                 isActive
-                                    ? "bg-brand text-black-rich font-bold"
-                                    : "text-white/70 hover:bg-white/5 hover:text-white"
+                                    ? "bg-brand text-white font-bold"
+                                    : "text-slate-600 hover:bg-slate-100 hover:text-black-rich"
                             )}
                         >
                             <Icon className="w-5 h-5" />
@@ -53,8 +55,25 @@ export function SettingsView({ user }: { user: any }) {
 }
 
 function ProfileSection({ user }: { user: any }) {
+    const [isLoading, setIsLoading] = useState(false);
+
+    async function handleSave(formData: FormData) {
+        setIsLoading(true);
+        const name = formData.get("name") as string;
+        const bio = formData.get("bio") as string;
+
+        const res = await updateUserProfile({ name, bio });
+
+        if (res.success) {
+            toast.success("Profile updated successfully!");
+        } else {
+            toast.error(res.error || "Failed to update profile");
+        }
+        setIsLoading(false);
+    }
+
     return (
-        <div className="rounded-xl border border-slate-200 bg-white p-8 shadow-sm">
+        <form action={handleSave} className="rounded-xl border border-slate-200 bg-white p-8 shadow-sm">
             <h2 className="text-xl font-bold text-black-rich mb-6 flex items-center gap-2">
                 <User className="h-5 w-5 text-brand" />
                 Personal Information
@@ -66,7 +85,9 @@ function ProfileSection({ user }: { user: any }) {
                         <label className="text-sm font-bold text-slate-500">Full Name</label>
                         <input
                             type="text"
+                            name="name"
                             defaultValue={user?.name || ""}
+                            required
                             className="w-full bg-slate-50 border border-slate-200 rounded-md py-2 px-4 text-black-rich focus:outline-none focus:border-brand focus:ring-1 focus:ring-brand"
                         />
                     </div>
@@ -84,20 +105,22 @@ function ProfileSection({ user }: { user: any }) {
                 <div className="space-y-2">
                     <label className="text-sm font-bold text-slate-500">Bio</label>
                     <textarea
+                        name="bio"
                         rows={4}
+                        defaultValue={user?.profile?.bio || ""}
                         placeholder="Tell us about your fitness journey..."
                         className="w-full bg-slate-50 border border-slate-200 rounded-md py-2 px-4 text-black-rich focus:outline-none focus:border-brand focus:ring-1 focus:ring-brand resize-none"
                     />
                 </div>
 
                 <div className="pt-4 border-t border-slate-100 flex justify-end">
-                    <button className="flex items-center gap-2 bg-brand text-white font-bold py-2 px-6 rounded-md hover:bg-brand-600 transition-colors shadow-sm">
-                        <Save className="w-4 h-4" />
-                        Save Changes
+                    <button type="submit" disabled={isLoading} className="flex items-center gap-2 bg-brand text-white font-bold py-2 px-6 rounded-md hover:bg-brand-600 transition-colors shadow-sm disabled:opacity-50">
+                        {isLoading ? <Loader2 className="w-4 h-4 animate-spin" /> : <Save className="w-4 h-4" />}
+                        {isLoading ? "Saving..." : "Save Changes"}
                     </button>
                 </div>
             </div>
-        </div>
+        </form>
     );
 }
 

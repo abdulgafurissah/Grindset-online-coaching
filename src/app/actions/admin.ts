@@ -242,6 +242,22 @@ export async function getAvailableCoaches() {
     }
 }
 
+export async function getAllCoaches() {
+    const session = await auth();
+    if (!session?.user?.id || (session.user as any).role !== "ADMIN") return [];
+
+    try {
+        return await prisma.user.findMany({
+            where: { role: "COACH" },
+            include: { profile: true },
+            orderBy: { createdAt: 'desc' }
+        });
+    } catch (error) {
+        console.error("Failed to fetch all coaches:", error);
+        return [];
+    }
+}
+
 export async function getClients() {
     const session = await auth();
     if (!session?.user?.id || (session.user as any).role !== "ADMIN") return [];

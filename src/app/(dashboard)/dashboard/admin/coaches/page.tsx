@@ -1,11 +1,11 @@
 import { Navbar } from "@/components/Navbar";
-import { getCoaches } from "@/app/actions/coach-public";
+import { getAllCoaches } from "@/app/actions/admin";
 import Link from "next/link";
 import { Plus, Edit, Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 export default async function AdminCoachesPage() {
-    const coaches = await getCoaches();
+    const coaches = await getAllCoaches();
 
     return (
         <div className="p-6 md:p-8 max-w-7xl mx-auto space-y-8">

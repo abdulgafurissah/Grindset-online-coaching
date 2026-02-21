@@ -37,8 +37,9 @@ const coachLinks = [
 const adminLinks = [
     { href: "/dashboard/admin", label: "Overview", icon: LayoutDashboard },
     { href: "/dashboard/admin/coaches", label: "Coaches", icon: Users },
-    { href: "/dashboard/programs", label: "Programs", icon: Dumbbell },
+    { href: "/dashboard/admin", label: "Programs", icon: Dumbbell },
     { href: "/dashboard/admin/finances", label: "Financials", icon: DollarSign },
+    { href: "/dashboard/settings", label: "Settings", icon: Settings },
 ];
 
 interface SidebarProps {
