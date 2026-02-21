@@ -318,3 +318,50 @@ export async function deletePaymentPlan(id: string) {
         return { error: "Failed to delete" };
     }
 }
+
+export async function createSubscription(planId: string) {
+    const session = await auth();
+    if (!session?.user?.id) return { error: "Unauthorized" };
+
+    const userId = session.user.id;
+
+    try {
+        const plan = await prisma.paymentPlan.findUnique({ where: { id: planId } });
+        if (!plan) return { error: "Plan not found" };
+
+        const currentPeriodEnd = new Date();
+        if ((plan.interval || "").toLowerCase() === "year") {
+            currentPeriodEnd.setFullYear(currentPeriodEnd.getFullYear() + 1);
+        } else {
+            currentPeriodEnd.setMonth(currentPeriodEnd.getMonth() + 1);
+        }
+
+        await prisma.subscription.upsert({
+            where: { userId },
+            update: {
+                planId: plan.id,
+                status: "ACTIVE",
+                currentPeriodEnd,
+                paypalSubscriptionId: `sub_sim_${Date.now()}`
+            },
+            create: {
+                userId,
+                planId: plan.id,
+                status: "ACTIVE",
+                currentPeriodEnd,
+                paypalSubscriptionId: `sub_sim_${Date.now()}`
+            }
+        });
+
+        // Ensure user is marked as CLIENT
+        await prisma.user.update({
+            where: { id: userId },
+            data: { role: "CLIENT" }
+        });
+
+        return { success: true };
+    } catch (error) {
+        console.error("Failed to subscribe:", error);
+        return { error: "Subscription failed" };
+    }
+}

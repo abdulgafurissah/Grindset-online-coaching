@@ -4,6 +4,7 @@ import { redirect } from "next/navigation";
 import { Navbar } from "@/components/Navbar";
 import { Button } from "@/components/ui/button";
 import { Check, Percent } from "lucide-react";
+import { SubscribeButton } from "./SubscribeButton";
 
 export default async function SubscribePage() {
     const session = await auth();
@@ -78,9 +79,7 @@ export default async function SubscribePage() {
                                     ))}
                                 </div>
 
-                                <Button className="w-full h-12 text-base font-bold bg-black-rich hover:bg-black text-white hover:scale-[1.02] transition-transform">
-                                    {finalPrice === 0 ? "Start Free Now" : "Subscribe Now"}
-                                </Button>
+                                <SubscribeButton planId={plan.id} finalPrice={finalPrice} />
                                 {/* In a real app, this button would trigger Stripe checkout or PayPal */}
                                 <p className="text-center text-xs text-slate-400 mt-4">
                                     Secure checkout powered by Stripe.
