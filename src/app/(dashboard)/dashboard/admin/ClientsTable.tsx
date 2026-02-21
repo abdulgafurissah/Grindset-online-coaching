@@ -17,6 +17,7 @@ import {
 
 interface Client extends User {
     coach: { id: string; name: string | null } | null;
+    assignedPrograms?: { title: string }[];
 }
 
 interface Coach {
@@ -113,7 +114,12 @@ export default function ClientsTable({ clients, coaches }: ClientsTableProps) {
                                 </td>
                                 <td className="px-6 py-4 text-slate-600">{client.email}</td>
                                 <td className="px-6 py-4 text-slate-600">{client.coach?.name || "Not Assigned"}</td>
-                                <td className="px-6 py-4 text-slate-600">{"No Program"}</td>
+                                <td className="px-6 py-4 text-slate-600">
+                                    {client.assignedPrograms && client.assignedPrograms.length > 0
+                                        ? client.assignedPrograms[0].title
+                                        : <span className="text-slate-400 italic">No Program</span>
+                                    }
+                                </td>
                                 <td className="px-6 py-4 text-right">
                                     <DropdownMenu>
                                         <DropdownMenuTrigger asChild>

@@ -83,19 +83,54 @@ export async function clearAllPayments() {
 
 export async function getAdminPayments() {
     const session = await auth();
-    if (!session?.user?.id || (session.user as any).role !== "ADMIN") return [];
+    if (!session?.user?.id || (session.user as any).role !== "ADMIN") return { payments: [], revenuePerCoach: [], revenuePerProgram: [] };
 
     try {
-        return await prisma.payment.findMany({
+        const payments = await prisma.payment.findMany({
+            where: { status: "COMPLETED" },
             orderBy: { createdAt: 'desc' },
             include: {
                 user: { select: { id: true, name: true, email: true } },
                 coach: { select: { id: true, name: true, email: true } }
             }
         });
+
+        // Calculate Revenue per Coach
+        const coachEarningsMap = new Map();
+        payments.forEach((p: any) => {
+            if (p.coachId && p.coach?.name) {
+                const current = coachEarningsMap.get(p.coach.name) || 0;
+                coachEarningsMap.set(p.coach.name, current + p.coachShare);
+            }
+        });
+        const revenuePerCoach = Array.from(coachEarningsMap.entries()).map(([name, amount]) => ({ name, amount })).sort((a, b) => b.amount - a.amount);
+
+        // Calculate Revenue per Program
+        // We need to fetch user's assigned programs to attribute payments to programs Since we don't have programId on Payment model
+        const authUsers = await prisma.user.findMany({
+            where: { role: "CLIENT" },
+            include: { assignedPrograms: { select: { title: true } } }
+        });
+
+        const programEarningsMap = new Map();
+        payments.forEach((p: any) => {
+            const clientName = p.user?.name || "Unknown Client";
+            const client = authUsers.find((u: any) => u.name === clientName);
+            const progName = client?.assignedPrograms?.[0]?.title || "General Coaching";
+
+            const current = programEarningsMap.get(progName) || 0;
+            programEarningsMap.set(progName, current + p.amount); // Platform uses total amount for revenue per program
+        });
+        const revenuePerProgram = Array.from(programEarningsMap.entries()).map(([name, amount]) => ({ name, amount })).sort((a, b) => b.amount - a.amount);
+
+        return {
+            payments,
+            revenuePerCoach,
+            revenuePerProgram
+        };
     } catch (error) {
         console.error("Failed to fetch payments:", error);
-        return [];
+        return { payments: [], revenuePerCoach: [], revenuePerProgram: [] };
     }
 }
 

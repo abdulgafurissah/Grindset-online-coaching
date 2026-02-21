@@ -18,7 +18,7 @@ export default async function AdminPage() {
     const coaches = await getAvailableCoaches();
     const clients = await getClients();
     const programs = await getPrograms();
-    const payments = await getAdminPayments();
+    const { payments, revenuePerCoach, revenuePerProgram } = await getAdminPayments();
     const subscriptions = await getSubscriptions();
     const plans = await getPaymentPlans(true);
     const consultations = await getAdminConsultations();
@@ -97,6 +97,34 @@ export default async function AdminPage() {
                 </TabsContent>
 
                 <TabsContent value="finances" className="space-y-8">
+                    {/* Revenue Breakdowns */}
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
+                        <div className="bg-white border border-slate-200 rounded-xl shadow-sm p-6">
+                            <h2 className="text-xl font-bold text-black-rich mb-4">Revenue by Coach</h2>
+                            <div className="space-y-4">
+                                {revenuePerCoach.map((coach: any, idx: number) => (
+                                    <div key={idx} className="flex justify-between items-center pb-4 border-b border-slate-100 last:border-0 last:pb-0">
+                                        <div className="font-medium text-black-rich">{coach.name}</div>
+                                        <div className="font-bold text-green-600">${coach.amount.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</div>
+                                    </div>
+                                ))}
+                                {revenuePerCoach.length === 0 && <div className="text-slate-500 text-sm">No coach revenue data.</div>}
+                            </div>
+                        </div>
+                        <div className="bg-white border border-slate-200 rounded-xl shadow-sm p-6">
+                            <h2 className="text-xl font-bold text-black-rich mb-4">Revenue by Program</h2>
+                            <div className="space-y-4">
+                                {revenuePerProgram.map((prog: any, idx: number) => (
+                                    <div key={idx} className="flex justify-between items-center pb-4 border-b border-slate-100 last:border-0 last:pb-0">
+                                        <div className="font-medium text-black-rich">{prog.name}</div>
+                                        <div className="font-bold text-green-600">${prog.amount.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</div>
+                                    </div>
+                                ))}
+                                {revenuePerProgram.length === 0 && <div className="text-slate-500 text-sm">No program revenue data.</div>}
+                            </div>
+                        </div>
+                    </div>
+
                     <div>
                         <PaymentPlansTable plans={plans as any} />
                     </div>

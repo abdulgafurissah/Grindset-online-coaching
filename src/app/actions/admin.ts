@@ -201,6 +201,24 @@ export async function deleteUser(userId: string) {
     }
 }
 
+export async function updateCoachProfile(coachId: string, data: { specialty: string; bio: string; commissionRate: number }) {
+    const session = await auth();
+    if (!session?.user?.id || (session.user as any).role !== "ADMIN") return { error: "Unauthorized" };
+
+    try {
+        await prisma.profile.update({
+            where: { userId: coachId },
+            data
+        });
+
+        revalidatePath("/dashboard/admin");
+        return { success: true };
+    } catch (error) {
+        console.error("Failed to update coach profile:", error);
+        return { error: "Failed to update coach profile" };
+    }
+}
+
 // ...
 import { assignCoachSchema } from "@/lib/validations";
 
@@ -267,7 +285,8 @@ export async function getClients() {
             where: { role: "CLIENT" },
             orderBy: { createdAt: 'desc' },
             include: {
-                coach: { select: { id: true, name: true } }
+                coach: { select: { id: true, name: true } },
+                assignedPrograms: { select: { title: true } }
             }
         });
     } catch (error) {

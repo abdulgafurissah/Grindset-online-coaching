@@ -13,6 +13,8 @@ import {
     DropdownMenuSeparator,
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import EditCoachDialog from "./EditCoachDialog";
+import { deleteUser } from "@/app/actions/admin";
 
 interface User {
     id: string;
@@ -63,6 +65,24 @@ export default function UsersTable({ users, coaches }: { users: User[], coaches:
             }
         } catch {
             toast.error("Error assigning coach");
+        }
+    };
+
+    const handleDeleteUser = async (userId: string) => {
+        if (!confirm("Are you sure you want to delete this user? This action cannot be undone.")) return;
+        setLoadingId(userId);
+        try {
+            const result = await deleteUser(userId);
+            if (result.success) {
+                toast.success("User deleted successfully.");
+                setUserList(prev => prev.filter(u => u.id !== userId));
+            } else {
+                toast.error(result.error || "Failed to delete user.");
+            }
+        } catch {
+            toast.error("Error deleting user.");
+        } finally {
+            setLoadingId(null);
         }
     };
 
@@ -141,6 +161,18 @@ export default function UsersTable({ users, coaches }: { users: User[], coaches:
                                                         {coach.name}
                                                     </DropdownMenuItem>
                                                 ))}
+                                            </>
+                                        )}
+                                        {user.role === "COACH" && (
+                                            <>
+                                                <DropdownMenuSeparator className="bg-slate-100" />
+                                                <EditCoachDialog coachId={user.id} />
+                                                <DropdownMenuItem
+                                                    onClick={() => handleDeleteUser(user.id)}
+                                                    className="focus:bg-red-50 focus:text-red-700 cursor-pointer rounded-sm text-red-600"
+                                                >
+                                                    Delete User
+                                                </DropdownMenuItem>
                                             </>
                                         )}
                                     </DropdownMenuContent>
