@@ -37,7 +37,7 @@ const coachLinks = [
 const adminLinks = [
     { href: "/dashboard/admin", label: "Overview", icon: LayoutDashboard },
     { href: "/dashboard/admin/coaches", label: "Coaches", icon: Users },
-    { href: "/dashboard/admin/programs", label: "Programs", icon: Dumbbell },
+    { href: "/dashboard/programs", label: "Programs", icon: Dumbbell },
     { href: "/dashboard/admin/finances", label: "Financials", icon: DollarSign },
 ];
 
