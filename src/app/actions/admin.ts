@@ -32,7 +32,45 @@ export async function getAdminStats() {
     }
 }
 
+// --- Consultations ---
+
+export async function getAdminConsultations() {
+    const session = await auth();
+    if (!session?.user?.id || (session.user as any).role !== "ADMIN") return [];
+
+    try {
+        return await prisma.consultation.findMany({
+            include: {
+                client: { select: { name: true, email: true, image: true } },
+                coach: { select: { name: true, email: true } },
+            },
+            orderBy: { requestedAt: "asc" }
+        });
+    } catch (error) {
+        console.error("Failed to fetch admin consultations:", error);
+        return [];
+    }
+}
+
+export async function updateConsultationStatus(id: string, status: "APPROVED" | "REJECTED" | "COMPLETED") {
+    const session = await auth();
+    if (!session?.user?.id || (session.user as any).role !== "ADMIN") return { error: "Unauthorized" };
+
+    try {
+        await prisma.consultation.update({
+            where: { id },
+            data: { status }
+        });
+        revalidatePath("/dashboard/admin");
+        return { success: true };
+    } catch (error) {
+        console.error("Failed to update consultation:", error);
+        return { error: "Failed to update consultation" };
+    }
+}
+
 // --- Application Management ---
+
 
 export async function getApplications(status?: string) {
     const session = await auth();

@@ -1,4 +1,4 @@
-import { getAdminStats, getApplications, getAdminUsers, getAvailableCoaches, getClients, getPrograms } from "@/app/actions/admin";
+import { getAdminStats, getApplications, getAdminUsers, getAvailableCoaches, getClients, getPrograms, getAdminConsultations } from "@/app/actions/admin";
 import { getAdminPayments, getSubscriptions, getPaymentPlans } from "@/app/actions/finance";
 import { CheckCircle, Clock, DollarSign, Users } from "lucide-react";
 import ApplicationsTable from "./ApplicationsTable";
@@ -8,6 +8,7 @@ import ProgramsTable from "./ProgramsTable";
 import PaymentsTable from "./finances/PaymentsTable";
 import SubscriptionsTable from "./finances/SubscriptionsTable";
 import PaymentPlansTable from "./finances/PaymentPlansTable";
+import ConsultationsTable from "./ConsultationsTable";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 export default async function AdminPage() {
@@ -20,6 +21,7 @@ export default async function AdminPage() {
     const payments = await getAdminPayments();
     const subscriptions = await getSubscriptions();
     const plans = await getPaymentPlans(true);
+    const consultations = await getAdminConsultations();
 
     if (!stats) return <div className="p-8 text-black-rich">Access Denied</div>;
 
@@ -60,6 +62,9 @@ export default async function AdminPage() {
                     <TabsTrigger value="users" className="data-[state=active]:bg-brand data-[state=active]:text-white text-slate-600 rounded-md px-6">
                         User Management
                     </TabsTrigger>
+                    <TabsTrigger value="consultations" className="data-[state=active]:bg-brand data-[state=active]:text-white text-slate-600 rounded-md px-6">
+                        Consultations {consultations.filter(c => c.status === "PENDING").length > 0 && `(${consultations.filter(c => c.status === "PENDING").length})`}
+                    </TabsTrigger>
                     <TabsTrigger value="clients" className="data-[state=active]:bg-brand data-[state=active]:text-white text-slate-600 rounded-md px-6">
                         Client Management
                     </TabsTrigger>
@@ -77,6 +82,10 @@ export default async function AdminPage() {
 
                 <TabsContent value="users">
                     <UsersTable users={adminUsers} coaches={coaches} />
+                </TabsContent>
+
+                <TabsContent value="consultations">
+                    <ConsultationsTable consultations={consultations as any} />
                 </TabsContent>
 
                 <TabsContent value="clients">
