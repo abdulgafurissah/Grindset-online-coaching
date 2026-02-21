@@ -220,12 +220,49 @@ export async function getCoachFinancialStats() {
             }
         });
 
+        // Earnings by Program: For simplicity in the MVP, since payments are subscription-based, 
+        // we'll attribute client earnings to their current assigned program.
+        const authUsers = await prisma.user.findMany({
+            where: { coachId },
+            include: { assignedPrograms: true }
+        });
+
+        const programEarningsMap = new Map();
+        authUsers.forEach((client: any) => {
+            const progName = client.assignedPrograms?.[0]?.title || "General Coaching";
+            const lifetimeValue = clientEarningsMap.get(client.name) || 0;
+            if (!programEarningsMap.has(progName)) {
+                programEarningsMap.set(progName, 0);
+            }
+            programEarningsMap.set(progName, programEarningsMap.get(progName) + lifetimeValue);
+        });
+
+        // Accurate real-time derivation
+        payments.forEach((p: any) => {
+            const clientName = p.user?.name || "Unknown Client";
+            // find client in authUsers
+            const client = authUsers.find((u: any) => u.name === clientName);
+            const progName = client?.assignedPrograms?.[0]?.title || "General Coaching";
+            if (!programEarningsMap.has(progName)) {
+                programEarningsMap.set(progName, 0);
+            }
+            if (!clientEarningsMap.has(clientName)) {
+                programEarningsMap.set(progName, programEarningsMap.get(progName) + p.coachShare);
+            }
+        });
+
+        const earningsPerProgram = Array.from(programEarningsMap.entries()).map(([name, amount]) => ({
+            name,
+            amount
+        })).sort((a, b) => b.amount - a.amount);
+
         return {
             totalEarnings,
             monthlyEarnings,
             pendingPayouts,
             payments,
-            earningsPerClient
+            earningsPerClient,
+            earningsPerProgram
         };
     } catch (error) {
         console.error("Coach Financials Error:", error);

@@ -63,6 +63,24 @@ export default async function CoachFinancesPage() {
                             <div className="text-center py-6 text-slate-500">No client earnings yet.</div>
                         )}
                     </div>
+
+                    <h2 className="text-xl font-bold text-black-rich mt-8">Earnings By Program</h2>
+                    <div className="bg-white border border-slate-200 rounded-xl shadow-sm p-6 overflow-hidden">
+                        {(stats.earningsPerProgram || []).length > 0 ? (
+                            <div className="space-y-4">
+                                {(stats.earningsPerProgram || []).map((progData: any, idx: number) => (
+                                    <div key={idx} className="flex justify-between items-center pb-4 border-b border-slate-100 last:border-0 last:pb-0">
+                                        <div className="font-medium text-black-rich flex-1 pr-4 truncate">{progData.name}</div>
+                                        <div className="font-bold text-green-600 shrink-0">
+                                            {formatCurrency(progData.amount)}
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+                        ) : (
+                            <div className="text-center py-6 text-slate-500">No program earnings yet.</div>
+                        )}
+                    </div>
                 </div>
             </div>
         </div>
