@@ -1,68 +1,97 @@
 import { Navbar } from "@/components/Navbar";
-import { Check } from "lucide-react";
+import { Check, Sparkles } from "lucide-react";
+import { getPaymentPlans } from "@/app/actions/finance";
+import Link from "next/link";
 
-const plans = [
-    {
-        name: "Hustler",
-        price: "49",
-        features: ["Weekly Workout Plan", "Basic Diet Guide", "Community Access"],
-        popular: false
-    },
-    {
-        name: "Grindset",
-        price: "99",
-        features: ["Custom Workout Plan", "Macro Coaching", "24/7 Chat Support", "Weekly Check-ins"],
-        popular: true
-    },
-    {
-        name: "Elite",
-        price: "299",
-        features: ["1-on-1 Video Calls", "Daily Adjustments", "Supplement Stack Guide", "Private Mastermind"],
-        popular: false
-    }
-];
+export default async function PricingPage() {
+    const plans = await getPaymentPlans();
 
-export default function PricingPage() {
     return (
-        <main className="min-h-screen bg-black-rich text-white">
+        <main className="min-h-screen bg-black-rich text-white overflow-hidden">
             <Navbar />
-            <div className="container mx-auto px-4 py-24">
-                <h1 className="text-4xl md:text-6xl font-black text-white uppercase tracking-tighter mb-4 text-center">
-                    Invest in <span className="text-brand">Yourself</span>
-                </h1>
-                <p className="text-center text-white/60 mb-16 max-w-2xl mx-auto">
-                    Choose the level of accountability and guidance you need to crush your goals.
-                </p>
 
-                <div className="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto">
-                    {plans.map((plan) => (
-                        <div key={plan.name} className={`relative p-8 rounded-2xl border ${plan.popular ? "bg-black-light border-brand shadow-2xl shadow-brand/10" : "bg-black-rich border-white/10"}`}>
-                            {plan.popular && (
-                                <span className="absolute -top-4 left-1/2 -translate-x-1/2 bg-brand text-black-rich font-bold px-4 py-1 text-xs uppercase tracking-widest rounded-full">
-                                    Most Popular
-                                </span>
-                            )}
-                            <h3 className="text-xl font-bold uppercase tracking-wider text-white mb-2">{plan.name}</h3>
-                            <div className="flex items-baseline gap-1 mb-8">
-                                <span className="text-4xl font-black text-white">${plan.price}</span>
-                                <span className="text-white/40">/month</span>
-                            </div>
-                            <ul className="space-y-4 mb-8">
-                                {plan.features.map((feature) => (
-                                    <li key={feature} className="flex items-center gap-3 text-sm text-white/80">
-                                        <div className="h-5 w-5 rounded-full bg-brand/20 flex items-center justify-center flex-shrink-0">
-                                            <Check className="h-3 w-3 text-brand" />
-                                        </div>
-                                        {feature}
-                                    </li>
-                                ))}
-                            </ul>
-                            <a href="/register" className={`block w-full py-4 text-center font-bold uppercase tracking-widest text-sm rounded-sm transition-all ${plan.popular ? "bg-brand text-black-rich hover:bg-white" : "bg-white/10 text-white hover:bg-white hover:text-black-rich"}`}>
-                                Choose {plan.name}
-                            </a>
-                        </div>
-                    ))}
+            {/* Background Glow */}
+            <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-[800px] h-[300px] bg-brand/20 blur-[120px] rounded-full pointer-events-none" />
+
+            <div className="container mx-auto px-4 py-24 relative z-10">
+                <div className="max-w-3xl mx-auto text-center mb-16 space-y-4">
+                    <h1 className="text-5xl md:text-7xl font-black text-white uppercase tracking-tighter">
+                        Invest in <span className="text-brand inline-block hover:scale-105 transition-transform cursor-default">Yourself</span>
+                    </h1>
+                    <p className="text-white/60 text-lg md:text-xl font-medium max-w-2xl mx-auto">
+                        Choose the level of accountability and guidance you need to crush your goals. No gimmicks, just results.
+                    </p>
                 </div>
+
+                {plans.length === 0 ? (
+                    <div className="text-center text-white/50 bg-black-light/50 p-12 rounded-3xl border border-white/10 max-w-xl mx-auto backdrop-blur-sm">
+                        <Sparkles className="w-12 h-12 text-brand mx-auto mb-4 opacity-50" />
+                        <h3 className="text-2xl font-bold uppercase tracking-widest mb-2">No Plans Available</h3>
+                        <p>We are currently updating our coaching packages. Check back soon!</p>
+                    </div>
+                ) : (
+                    <div className="grid md:grid-cols-1 lg:grid-cols-3 gap-8 max-w-6xl mx-auto">
+                        {plans.map((plan: any, index: number) => {
+                            // Determine if this plan is "popular" (e.g., the middle plan or the highest priced)
+                            const isPopular = index === 1 || plan.promoPercentage > 0;
+
+                            return (
+                                <div
+                                    key={plan.id}
+                                    className={`relative group flex flex-col p-8 rounded-3xl border transition-all duration-500 hover:-translate-y-2 ${isPopular
+                                            ? "bg-gradient-to-b from-black-light to-black-rich border-brand shadow-2xl shadow-brand/20"
+                                            : "bg-black-rich border-white/10 hover:border-white/30 hover:bg-black-light/80"
+                                        }`}
+                                >
+                                    {isPopular && (
+                                        <div className="absolute -top-4 left-1/2 -translate-x-1/2 bg-brand text-black-rich font-bold px-6 py-1.5 text-xs uppercase tracking-widest rounded-full flex items-center gap-1.5 shadow-lg shadow-brand/30">
+                                            <Sparkles className="w-3 h-3" />
+                                            Most Popular
+                                        </div>
+                                    )}
+
+                                    <div className="mb-8">
+                                        <h3 className="text-2xl font-black uppercase tracking-wider text-white mb-2">{plan.name}</h3>
+                                        <div className="flex flex-col">
+                                            {plan.promoPercentage > 0 && (
+                                                <span className="text-brand/80 font-bold text-sm uppercase tracking-widest block mb-1">
+                                                    Save {plan.promoPercentage}%
+                                                </span>
+                                            )}
+                                            <div className="flex items-baseline gap-1">
+                                                <span className="text-5xl font-black text-white">${plan.price}</span>
+                                                <span className="text-white/40 font-medium">/{plan.interval}</span>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div className="flex-1 mb-10">
+                                        <ul className="space-y-5">
+                                            {plan.features.map((feature: string, i: number) => (
+                                                <li key={i} className="flex items-start gap-4 text-white/80 font-medium">
+                                                    <div className={`mt-1 h-5 w-5 rounded-full flex items-center justify-center flex-shrink-0 ${isPopular ? "bg-brand/20" : "bg-white/10"}`}>
+                                                        <Check className={`h-3 w-3 ${isPopular ? "text-brand" : "text-white"}`} />
+                                                    </div>
+                                                    <span className="leading-snug">{feature}</span>
+                                                </li>
+                                            ))}
+                                        </ul>
+                                    </div>
+
+                                    <Link
+                                        href={`/register?plan=${plan.id}`}
+                                        className={`mt-auto block w-full py-4 text-center font-bold uppercase tracking-widest text-sm rounded-xl transition-all duration-300 ${isPopular
+                                                ? "bg-brand text-black-rich hover:bg-brand/90 hover:shadow-lg hover:shadow-brand/20 hover:scale-[1.02]"
+                                                : "bg-white/10 text-white hover:bg-white hover:text-black-rich hover:scale-[1.02]"
+                                            }`}
+                                    >
+                                        Choose {plan.name}
+                                    </Link>
+                                </div>
+                            );
+                        })}
+                    </div>
+                )}
             </div>
         </main>
     );
