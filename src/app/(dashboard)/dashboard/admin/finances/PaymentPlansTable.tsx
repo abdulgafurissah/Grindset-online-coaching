@@ -13,6 +13,7 @@ interface PaymentPlan {
     name: string;
     price: number;
     interval: string;
+    category: string;
     features: any;
     isActive: boolean;
     promoPercentage: number;
@@ -43,6 +44,7 @@ export default function PaymentPlansTable({ plans }: { plans: PaymentPlan[] }) {
                             <th className="px-6 py-4">Name</th>
                             <th className="px-6 py-4">Price</th>
                             <th className="px-6 py-4">Interval</th>
+                            <th className="px-6 py-4">Category</th>
                             <th className="px-6 py-4">Promo</th>
                             <th className="px-6 py-4 text-center">Status</th>
                             <th className="px-6 py-4 text-right">Actions</th>
@@ -70,6 +72,11 @@ export default function PaymentPlansTable({ plans }: { plans: PaymentPlan[] }) {
                                         </div>
                                     </td>
                                     <td className="px-6 py-4 text-slate-500 capitalize">{plan.interval}</td>
+                                    <td className="px-6 py-4">
+                                        <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-bold bg-slate-100 text-slate-600 border border-slate-200">
+                                            {plan.category || "General"}
+                                        </span>
+                                    </td>
                                     <td className="px-6 py-4">
                                         {plan.promoPercentage > 0 ? (
                                             <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded text-xs font-bold bg-brand/10 text-brand border border-brand/20">

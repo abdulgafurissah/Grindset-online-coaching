@@ -334,7 +334,7 @@ export async function getPaymentPlans(includeInactive = false) {
     }
 }
 
-export async function createPaymentPlan(data: { name: string, price: number, interval: string, features: string[], isActive: boolean, promoPercentage: number }) {
+export async function createPaymentPlan(data: { name: string, price: number, interval: string, category: string, features: string[], isActive: boolean, promoPercentage: number }) {
     const session = await auth();
     if (!session?.user?.id || (session.user as any).role !== "ADMIN") return { error: "Unauthorized" };
 
@@ -344,6 +344,7 @@ export async function createPaymentPlan(data: { name: string, price: number, int
                 name: data.name,
                 price: data.price,
                 interval: data.interval,
+                category: data.category,
                 features: data.features,
                 isActive: data.isActive,
                 promoPercentage: data.promoPercentage
@@ -357,7 +358,7 @@ export async function createPaymentPlan(data: { name: string, price: number, int
     }
 }
 
-export async function updatePaymentPlan(id: string, data: { name?: string, price?: number, interval?: string, features?: string[], isActive?: boolean, promoPercentage?: number }) {
+export async function updatePaymentPlan(id: string, data: { name?: string, price?: number, interval?: string, category?: string, features?: string[], isActive?: boolean, promoPercentage?: number }) {
     const session = await auth();
     if (!session?.user?.id || (session.user as any).role !== "ADMIN") return { error: "Unauthorized" };
 

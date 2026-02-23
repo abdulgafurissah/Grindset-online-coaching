@@ -20,6 +20,7 @@ interface PaymentPlan {
     name: string;
     price: number;
     interval: string;
+    category: string;
     features: any;
     isActive: boolean;
     promoPercentage: number;
@@ -39,6 +40,7 @@ export default function PaymentPlanDialog({ plan }: { plan?: PaymentPlan }) {
             name: formData.get("name") as string,
             price: parseFloat(formData.get("price") as string) || 0,
             interval: formData.get("interval") as string,
+            category: (formData.get("category") as string) || "General",
             features: features.filter(f => f.trim() !== ""),
             isActive: formData.get("isActive") === "on",
             promoPercentage: parseFloat(formData.get("promoPercentage") as string) || 0
@@ -102,7 +104,7 @@ export default function PaymentPlanDialog({ plan }: { plan?: PaymentPlan }) {
                             />
                         </div>
                         <div className="space-y-2">
-                            <label className="text-sm font-medium">Interval</label>
+                            <label className="text-sm font-medium">Billing Interval</label>
                             <select
                                 name="interval"
                                 defaultValue={plan?.interval || "month"}
@@ -110,9 +112,21 @@ export default function PaymentPlanDialog({ plan }: { plan?: PaymentPlan }) {
                             >
                                 <option value="month">Monthly</option>
                                 <option value="year">Yearly</option>
+                                <option value="week">Weekly</option>
+                                <option value="one-time">One-Time</option>
                             </select>
                         </div>
                         <div className="space-y-2">
+                            <label className="text-sm font-medium">Category</label>
+                            <input
+                                name="category"
+                                defaultValue={plan?.category || "General"}
+                                required
+                                placeholder="e.g. 1-on-1 Coaching, Mastermind..."
+                                className="flex h-10 w-full rounded-md border border-slate-200 bg-white px-3 py-2 text-sm"
+                            />
+                        </div>
+                        <div className="space-y-2 col-span-2">
                             <label className="text-sm font-medium">Promo (%)</label>
                             <select
                                 name="promoPercentage"

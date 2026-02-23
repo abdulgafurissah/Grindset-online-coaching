@@ -169,6 +169,7 @@ model PaymentPlan {
   name             String
   price            Float
   interval         String   // e.g. "month", "year"
+  category         String   @default("General")
   features         Json
   isActive         Boolean  @default(true)
   promoPercentage  Float    @default(0) // 0 means no promo, 50 means 50% off
