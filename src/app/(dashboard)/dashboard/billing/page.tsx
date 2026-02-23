@@ -5,6 +5,7 @@ import { getPaymentPlans } from "@/app/actions/finance";
 import { Check, Shield, Sparkles } from "lucide-react";
 import { PayPalSubscription } from "@/components/PayPalSubscription";
 import { Button, buttonVariants } from "@/components/ui/button";
+import Link from "next/link";
 
 export default async function BillingPage() {
     const session = await auth();
@@ -57,14 +58,15 @@ export default async function BillingPage() {
                                 <p className="text-sm text-slate-500 mb-4">
                                     Your subscription is active and managed via PayPal.
                                 </p>
-                                <a
+                                <Link
                                     href="https://www.paypal.com/myaccount/autopay/"
                                     target="_blank"
                                     rel="noopener noreferrer"
+                                    prefetch={false}
                                     className={buttonVariants({ variant: "outline", className: "w-full" })}
                                 >
                                     Manage on PayPal
-                                </a>
+                                </Link>
                             </div>
                         ) : (
                             <p className="text-sm text-slate-400 text-center">
