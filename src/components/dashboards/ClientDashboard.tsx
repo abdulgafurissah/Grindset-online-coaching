@@ -3,7 +3,8 @@ import {
     ArrowRight,
     Play,
     MessageSquare,
-    User
+    User,
+    ShieldCheck
 } from "lucide-react";
 import Link from "next/link";
 import { getPrograms } from "@/app/actions/programs";
@@ -16,12 +17,19 @@ export async function ClientDashboard({ user }: { user?: any }) {
         where: { id: user.id },
         include: {
             coach: { select: { id: true, name: true, email: true, image: true } },
-            assignedPrograms: true // Fetch explicitly assigned programs
+            assignedPrograms: true, // Fetch explicitly assigned programs
+            subscription: {
+                include: {
+                    plan: true
+                }
+            }
         }
     });
 
     const firstName = clientData?.name?.split(" ")[0] || "Athlete";
     const coach = clientData?.coach;
+    const subscription = clientData?.subscription;
+    const activePlan = subscription?.status === "ACTIVE" && subscription.currentPeriodEnd.getTime() > Date.now() ? subscription.plan : null;
 
     let displayPrograms = clientData?.assignedPrograms || [];
 
@@ -57,6 +65,42 @@ export async function ClientDashboard({ user }: { user?: any }) {
             <div className="grid lg:grid-cols-3 gap-8">
                 {/* Main Content Column */}
                 <div className="lg:col-span-2 space-y-8">
+
+                    {/* Active Subscription Banner */}
+                    {activePlan ? (
+                        <div className="bg-gradient-to-r from-brand/10 to-brand/5 border border-brand/20 rounded-2xl p-6 flex flex-col sm:flex-row items-center justify-between gap-4">
+                            <div className="flex items-center gap-4">
+                                <div className="w-12 h-12 rounded-full bg-brand/20 flex items-center justify-center">
+                                    <ShieldCheck className="w-6 h-6 text-brand" />
+                                </div>
+                                <div>
+                                    <h3 className="text-lg font-bold text-black-rich uppercase tracking-tight">{activePlan.name} Tier</h3>
+                                    <p className="text-sm text-slate-500">Your premium subscription is active.</p>
+                                </div>
+                            </div>
+                            <Link
+                                href="/dashboard/billing"
+                                className="px-4 py-2 bg-white text-black-rich font-bold text-sm tracking-wide uppercase rounded-lg border border-slate-200 hover:border-brand hover:text-brand transition-colors whitespace-nowrap"
+                            >
+                                Manage Plan
+                            </Link>
+                        </div>
+                    ) : (
+                        <div className="bg-slate-50 border border-slate-200 rounded-2xl p-6 flex flex-col sm:flex-row items-center justify-between gap-4">
+                            <div className="flex items-center gap-4">
+                                <div>
+                                    <h3 className="text-lg font-bold text-black-rich uppercase tracking-tight">Upgrade Your Game</h3>
+                                    <p className="text-sm text-slate-500">Unlock premium coaching, programs, and messaging.</p>
+                                </div>
+                            </div>
+                            <Link
+                                href="/dashboard/billing"
+                                className="px-4 py-2 bg-brand text-black-rich font-bold text-sm tracking-wide uppercase rounded-lg hover:bg-brand/90 transition-colors whitespace-nowrap shadow-md shadow-brand/20"
+                            >
+                                View Plans
+                            </Link>
+                        </div>
+                    )}
 
                     {/* Featured Programs Section - Primary Focus */}
                     <div>

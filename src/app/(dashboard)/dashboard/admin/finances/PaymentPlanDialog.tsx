@@ -21,6 +21,7 @@ interface PaymentPlan {
     price: number;
     interval: string;
     category: string;
+    paypalPlanId?: string | null;
     features: any;
     isActive: boolean;
     promoPercentage: number;
@@ -41,6 +42,7 @@ export default function PaymentPlanDialog({ plan }: { plan?: PaymentPlan }) {
             price: parseFloat(formData.get("price") as string) || 0,
             interval: formData.get("interval") as string,
             category: (formData.get("category") as string) || "General",
+            paypalPlanId: (formData.get("paypalPlanId") as string) || undefined,
             features: features.filter(f => f.trim() !== ""),
             isActive: formData.get("isActive") === "on",
             promoPercentage: parseFloat(formData.get("promoPercentage") as string) || 0
@@ -125,6 +127,16 @@ export default function PaymentPlanDialog({ plan }: { plan?: PaymentPlan }) {
                                 placeholder="e.g. 1-on-1 Coaching, Mastermind..."
                                 className="flex h-10 w-full rounded-md border border-slate-200 bg-white px-3 py-2 text-sm"
                             />
+                        </div>
+                        <div className="space-y-2 col-span-2">
+                            <label className="text-sm font-medium">PayPal Plan ID (Optional)</label>
+                            <input
+                                name="paypalPlanId"
+                                defaultValue={plan?.paypalPlanId || ""}
+                                placeholder="e.g. P-1234567890"
+                                className="flex h-10 w-full rounded-md border border-slate-200 bg-white px-3 py-2 text-sm"
+                            />
+                            <p className="text-xs text-slate-500">Links this Grindset plan to a real PayPal Subscription Plan.</p>
                         </div>
                         <div className="space-y-2 col-span-2">
                             <label className="text-sm font-medium">Promo (%)</label>

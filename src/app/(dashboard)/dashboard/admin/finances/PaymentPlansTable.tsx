@@ -14,6 +14,7 @@ interface PaymentPlan {
     price: number;
     interval: string;
     category: string;
+    paypalPlanId?: string | null;
     features: any;
     isActive: boolean;
     promoPercentage: number;
@@ -45,6 +46,7 @@ export default function PaymentPlansTable({ plans }: { plans: PaymentPlan[] }) {
                             <th className="px-6 py-4">Price</th>
                             <th className="px-6 py-4">Interval</th>
                             <th className="px-6 py-4">Category</th>
+                            <th className="px-6 py-4">PayPal ID</th>
                             <th className="px-6 py-4">Promo</th>
                             <th className="px-6 py-4 text-center">Status</th>
                             <th className="px-6 py-4 text-right">Actions</th>
@@ -76,6 +78,15 @@ export default function PaymentPlansTable({ plans }: { plans: PaymentPlan[] }) {
                                         <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-bold bg-slate-100 text-slate-600 border border-slate-200">
                                             {plan.category || "General"}
                                         </span>
+                                    </td>
+                                    <td className="px-6 py-4">
+                                        {plan.paypalPlanId ? (
+                                            <span className="text-xs font-mono bg-blue-50 text-blue-600 px-2 py-1 rounded border border-blue-100">
+                                                {plan.paypalPlanId}
+                                            </span>
+                                        ) : (
+                                            <span className="text-slate-400 text-xs italic">Unlinked</span>
+                                        )}
                                     </td>
                                     <td className="px-6 py-4">
                                         {plan.promoPercentage > 0 ? (
