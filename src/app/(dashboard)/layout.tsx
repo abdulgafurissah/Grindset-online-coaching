@@ -19,19 +19,8 @@ export default async function DashboardLayout({
 
     const role = (session.user as any).role;
 
-    // Subscription Guard for CLIENTS
-    if (role === "CLIENT") {
-        const subscription = await prisma.subscription.findUnique({
-            where: { userId: session.user.id }
-        });
-
-        const hasActiveSubscription = subscription && new Date(subscription.currentPeriodEnd) > new Date();
-
-        // If no active subscription, force them to the subscribe page
-        if (!hasActiveSubscription) {
-            redirect("/subscribe");
-        }
-    }
+    // Allow all clients to access the dashboard. 
+    // Subscription status is handled gracefully on individual pages (ClientDashboard, Billing).
 
     return <DashboardLayoutClient>{children}</DashboardLayoutClient>;
 }
