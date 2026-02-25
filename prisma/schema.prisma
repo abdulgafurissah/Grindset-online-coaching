@@ -170,8 +170,7 @@ model PaymentPlan {
   price            Float
   interval         String   // e.g. "month", "year"
   category         String   @default("General")
-  paypalPlanId     String?  // Links to real PayPal Subscription Plan ID
-  paymentLink      String?  // The static paypal payment link (New)
+  paymentLink      String?  // The static paypal payment link
   features         Json
   isActive         Boolean  @default(true)
   promoPercentage  Float    @default(0) // 0 means no promo, 50 means 50% off

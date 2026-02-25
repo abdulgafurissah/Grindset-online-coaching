@@ -14,7 +14,6 @@ interface PaymentPlan {
     price: number;
     interval: string;
     category: string;
-    paypalPlanId?: string | null;
     paymentLink?: string | null;
     features: any;
     isActive: boolean;
@@ -85,10 +84,6 @@ export default function PaymentPlansTable({ plans }: { plans: PaymentPlan[] }) {
                                             <a href={plan.paymentLink} target="_blank" rel="noopener noreferrer" className="text-xs font-mono bg-blue-50 text-blue-600 px-2 py-1 rounded border border-blue-100 hover:bg-blue-100 transition-colors">
                                                 Link
                                             </a>
-                                        ) : plan.paypalPlanId ? (
-                                            <span className="text-xs font-mono bg-blue-50 text-blue-600 px-2 py-1 rounded border border-blue-100">
-                                                {plan.paypalPlanId}
-                                            </span>
                                         ) : (
                                             <span className="text-slate-400 text-xs italic">Unlinked</span>
                                         )}
