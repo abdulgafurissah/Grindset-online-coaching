@@ -88,14 +88,17 @@ export async function ClientDashboard({ user }: { user?: any }) {
                     ) : (
                         <div className="bg-slate-50 border border-slate-200 rounded-2xl p-6 flex flex-col sm:flex-row items-center justify-between gap-4">
                             <div className="flex items-center gap-4">
+                                <div className="w-12 h-12 rounded-full bg-slate-200 flex items-center justify-center">
+                                    <ShieldCheck className="w-6 h-6 text-slate-400" />
+                                </div>
                                 <div>
-                                    <h3 className="text-lg font-bold text-black-rich uppercase tracking-tight">Upgrade Your Game</h3>
-                                    <p className="text-sm text-slate-500">Unlock premium coaching, programs, and messaging.</p>
+                                    <h3 className="text-lg font-bold text-slate-500 uppercase tracking-tight">No Active Plan</h3>
+                                    <p className="text-sm text-slate-400">You are currently not subscribed to any plan.</p>
                                 </div>
                             </div>
                             <Link
                                 href="/dashboard/billing"
-                                className="px-4 py-2 bg-brand text-black-rich font-bold text-sm tracking-wide uppercase rounded-lg hover:bg-brand/90 transition-colors whitespace-nowrap shadow-md shadow-brand/20"
+                                className="px-4 py-2 bg-slate-200 text-slate-600 font-bold text-sm tracking-wide uppercase rounded-lg hover:bg-slate-300 transition-colors whitespace-nowrap shadow-sm"
                             >
                                 View Plans
                             </Link>
