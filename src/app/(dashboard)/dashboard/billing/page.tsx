@@ -25,35 +25,32 @@ export default async function BillingPage() {
             <h1 className="text-3xl font-bold text-black-rich mb-2 uppercase tracking-tight">Billing & Subscription</h1>
             <p className="text-slate-500 mb-8">Manage your plan and payment details.</p>
 
-            <div className="grid md:grid-cols-2 gap-8">
-                {/* Status Card */}
-                <div className="bg-white border border-slate-200 rounded-xl p-8 flex flex-col justify-between shadow-sm">
-                    <div>
-                        <h2 className="text-xl font-bold text-black-rich mb-4 flex items-center gap-2">
-                            <Shield className="h-5 w-5 text-brand" />
-                            Current Status
-                        </h2>
-                        <div className="space-y-4">
-                            <div className="flex justify-between items-center py-2 border-b border-slate-100">
-                                <span className="text-slate-500">Plan</span>
-                                <span className="font-bold text-black-rich">
-                                    {subscription.isValid ? "Premium Coaching" : "Free / Inactive"}
-                                </span>
-                            </div>
-                            <div className="flex justify-between items-center py-2 border-b border-slate-100">
-                                <span className="text-slate-500">Status</span>
-                                <span className={`font-bold px-2 py-0.5 rounded text-xs uppercase ${subscription.isValid
-                                    ? "bg-green-100 text-green-600"
-                                    : "bg-slate-100 text-slate-500"
-                                    }`}>
-                                    {subscription.isValid ? "Active" : "Inactive"}
-                                </span>
+            {subscription.isValid && (
+                <div className="grid md:grid-cols-2 gap-8">
+                    {/* Status Card */}
+                    <div className="bg-white border border-slate-200 rounded-xl p-8 flex flex-col justify-between shadow-sm">
+                        <div>
+                            <h2 className="text-xl font-bold text-black-rich mb-4 flex items-center gap-2">
+                                <Shield className="h-5 w-5 text-brand" />
+                                Current Status
+                            </h2>
+                            <div className="space-y-4">
+                                <div className="flex justify-between items-center py-2 border-b border-slate-100">
+                                    <span className="text-slate-500">Plan</span>
+                                    <span className="font-bold text-black-rich">
+                                        Premium Coaching
+                                    </span>
+                                </div>
+                                <div className="flex justify-between items-center py-2 border-b border-slate-100">
+                                    <span className="text-slate-500">Status</span>
+                                    <span className="font-bold px-2 py-0.5 rounded text-xs uppercase bg-green-100 text-green-600">
+                                        Active
+                                    </span>
+                                </div>
                             </div>
                         </div>
-                    </div>
 
-                    <div className="mt-8">
-                        {subscription.isValid ? (
+                        <div className="mt-8">
                             <div className="text-center">
                                 <p className="text-sm text-slate-500 mb-4">
                                     Your subscription is active and managed via PayPal.
@@ -68,23 +65,17 @@ export default async function BillingPage() {
                                     Manage on PayPal
                                 </Link>
                             </div>
-                        ) : (
-                            <p className="text-sm text-slate-400 text-center">
-                                Subscribe to access premium features.
-                            </p>
-                        )}
+                        </div>
                     </div>
-                </div>
 
-                {/* Subscribed Plan Display Placeholder */}
-                {subscription.isValid && (
+                    {/* Subscribed Plan Display Placeholder */}
                     <div className="bg-black-rich text-white border border-slate-800 rounded-xl p-8 flex flex-col justify-center items-center text-center shadow-xl">
                         <Check className="w-16 h-16 text-brand mb-4" />
                         <h3 className="text-2xl font-bold mb-2">You are All Set!</h3>
                         <p className="text-white/60">Your active plan details will appear here soon.</p>
                     </div>
-                )}
-            </div>
+                </div>
+            )}
 
             {/* Pricing Options (Show only if inactive) */}
             {!subscription.isValid && (
