@@ -10,13 +10,44 @@ interface SubscribeButtonProps {
 
 export function SubscribeButton({ planId, paymentLink }: SubscribeButtonProps) {
     const [isLoading, setIsLoading] = useState(false);
+    const [awaitingReturn, setAwaitingReturn] = useState(false);
 
     const handleSubscribe = () => {
         setIsLoading(true);
         // Store intended plan in a cookie before navigating away
         document.cookie = `checkout_plan_id=${planId}; path=/; max-age=${60 * 60 * 24}`; // 24 hours
-        window.location.href = paymentLink;
+
+        // Open the PayPal link in a new tab
+        window.open(paymentLink, "_blank");
+
+        // Show the fallback button in case auto-return fails
+        setIsLoading(false);
+        setAwaitingReturn(true);
     };
+
+    if (awaitingReturn) {
+        return (
+            <div className="space-y-3">
+                <Button
+                    onClick={() => {
+                        window.location.href = "/dashboard/billing/success";
+                    }}
+                    className="w-full bg-green-600 text-white hover:bg-green-700 font-bold tracking-wider transition-all"
+                >
+                    I have completed my payment
+                </Button>
+                <p className="text-xs text-center text-slate-500">
+                    Click above once you finish on PayPal.
+                </p>
+                <button
+                    onClick={() => setAwaitingReturn(false)}
+                    className="w-full text-xs text-slate-400 hover:text-slate-600 underline"
+                >
+                    Cancel / Go back
+                </button>
+            </div>
+        );
+    }
 
     return (
         <Button
