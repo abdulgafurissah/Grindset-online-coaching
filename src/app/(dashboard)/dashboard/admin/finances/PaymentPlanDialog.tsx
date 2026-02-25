@@ -22,6 +22,7 @@ interface PaymentPlan {
     interval: string;
     category: string;
     paypalPlanId?: string | null;
+    paymentLink?: string | null;
     features: any;
     isActive: boolean;
     promoPercentage: number;
@@ -43,6 +44,7 @@ export default function PaymentPlanDialog({ plan }: { plan?: PaymentPlan }) {
             interval: formData.get("interval") as string,
             category: (formData.get("category") as string) || "General",
             paypalPlanId: (formData.get("paypalPlanId") as string) || undefined,
+            paymentLink: (formData.get("paymentLink") as string) || undefined,
             features: features.filter(f => f.trim() !== ""),
             isActive: formData.get("isActive") === "on",
             promoPercentage: parseFloat(formData.get("promoPercentage") as string) || 0
@@ -129,7 +131,17 @@ export default function PaymentPlanDialog({ plan }: { plan?: PaymentPlan }) {
                             />
                         </div>
                         <div className="space-y-2 col-span-2">
-                            <label className="text-sm font-medium">PayPal Plan ID (Optional)</label>
+                            <label className="text-sm font-medium">Payment Link (Recommended)</label>
+                            <input
+                                name="paymentLink"
+                                defaultValue={plan?.paymentLink || ""}
+                                placeholder="e.g. https://paypal.me/..."
+                                className="flex h-10 w-full rounded-md border border-slate-200 bg-white px-3 py-2 text-sm"
+                            />
+                            <p className="text-xs text-slate-500">Provide a direct payment link where clients will be sent.</p>
+                        </div>
+                        <div className="space-y-2 col-span-2">
+                            <label className="text-sm font-medium">PayPal Plan ID (Legacy)</label>
                             <input
                                 name="paypalPlanId"
                                 defaultValue={plan?.paypalPlanId || ""}

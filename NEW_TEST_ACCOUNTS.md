@@ -9,3 +9,10 @@ The database has been fully wiped and re-seeded with fresh data. Here are the ac
 | **Client** | `client@grindset.com` | `password123` | Assigned to Coach Carter. Can view active programs and log workout/weight progress. |
 
 > **Note:** All old data has been permanently deleted. You can safely log in using these credentials to "have a taste of the app"!
+
+
+
+Here are your brand new, highly secure Admin credentials:
+
+Email: admin@grindsetcoaching.com
+Password: a7d226252618b0dfd8af37e19fd53059!A1

@@ -4,6 +4,7 @@ import { getSubscriptionStatus } from "@/app/actions/payment";
 import { getPaymentPlans } from "@/app/actions/finance";
 import { Check, Shield, Sparkles } from "lucide-react";
 import { PayPalSubscription } from "@/components/PayPalSubscription";
+import { SubscribeButton } from "@/components/SubscribeButton";
 import { Button, buttonVariants } from "@/components/ui/button";
 import Link from "next/link";
 
@@ -129,7 +130,9 @@ export default async function BillingPage() {
                                             </div>
 
                                             <div className="mt-auto">
-                                                {plan.paypalPlanId ? (
+                                                {plan.paymentLink ? (
+                                                    <SubscribeButton planId={plan.id} paymentLink={plan.paymentLink} />
+                                                ) : plan.paypalPlanId ? (
                                                     <PayPalSubscription planId={plan.paypalPlanId} />
                                                 ) : (
                                                     <Button disabled className="w-full bg-slate-100 text-slate-400 hover:bg-slate-100">
