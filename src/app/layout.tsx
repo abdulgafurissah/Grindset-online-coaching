@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Providers } from "@/components/Providers";
 import { Footer } from "@/components/Footer";
+import { TawkChatInfo } from "@/components/TawkChatInfo";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -22,6 +23,7 @@ export default function RootLayout({
                 <Providers>
                     {children}
                     <Footer />
+                    <TawkChatInfo />
                 </Providers>
             </body>
         </html>
