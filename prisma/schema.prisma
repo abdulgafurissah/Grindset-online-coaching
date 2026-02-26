@@ -83,6 +83,7 @@ model Profile {
   gender        String?
   dob           DateTime?
   nationality   String?
+  timezone      String?
   phoneNumber   String?
   whatsappNumber String?
   emergencyContact String?
