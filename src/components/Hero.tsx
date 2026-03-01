@@ -1,6 +1,5 @@
 import Link from "next/link";
 import Image from "next/image";
-import { BookAdminConsultationDialog } from "@/components/BookAdminConsultationDialog";
 
 export function Hero() {
     return (
@@ -19,14 +18,31 @@ export function Hero() {
                         Professional coaching tailored to your lifestyle. We combine nutrition, training, and mindset to build a better you.
                     </p>
 
-                    <div className="flex flex-col sm:flex-row items-center lg:justify-start justify-center gap-4">
-                        <BookAdminConsultationDialog />
-                        <Link
-                            href="/coaches"
-                            className="w-full sm:w-auto border border-black-rich/10 hover:border-brand hover:text-brand text-black-rich font-bold py-4 px-10 rounded-lg transition-all"
-                        >
-                            View Coaches
-                        </Link>
+                    <div className="flex flex-col gap-4">
+                        <div className="flex flex-col sm:flex-row items-center lg:justify-start justify-center gap-4">
+                            <a
+                                href="https://calendly.com/online-coach968"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="w-full sm:w-auto bg-brand hover:bg-brand-600 text-white font-bold py-4 px-10 rounded-lg shadow-lg hover:shadow-brand/30 transition-all transform hover:-translate-y-1 text-center"
+                            >
+                                Book Free Consultation
+                            </a>
+                            <Link
+                                href="/coaches"
+                                className="w-full sm:w-auto border border-black-rich/10 hover:border-brand hover:text-brand text-black-rich font-bold py-4 px-10 rounded-lg transition-all text-center"
+                            >
+                                View Coaches
+                            </Link>
+                        </div>
+                        <div className="flex flex-col sm:flex-row items-center lg:justify-start justify-center gap-4">
+                            <Link
+                                href="/register"
+                                className="w-full sm:w-auto bg-brand hover:bg-brand-600 text-white font-bold py-4 px-10 rounded-lg shadow-lg hover:shadow-brand/30 transition-all transform hover:-translate-y-1 text-center"
+                            >
+                                Join now
+                            </Link>
+                        </div>
                     </div>
 
                     <div className="mt-12 flex items-center justify-center lg:justify-start gap-8 text-black-rich/40 grayscale">
