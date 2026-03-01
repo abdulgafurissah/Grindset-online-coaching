@@ -25,10 +25,10 @@ export function Navbar() {
     return (
         <nav
             className={cn(
-                "fixed top-0 w-full z-50 transition-all duration-300 border-b",
+                "fixed w-full z-50 transition-all duration-500",
                 scrolled || mobileMenuOpen
-                    ? "bg-white/90 backdrop-blur-md border-slate-200 py-4 shadow-sm"
-                    : "bg-transparent border-transparent py-6"
+                    ? "top-4 w-[calc(100%-2rem)] mx-4 bg-white/80 backdrop-blur-xl border border-white/40 shadow-xl shadow-brand/5 py-3 rounded-full"
+                    : "top-0 bg-transparent border-transparent py-6"
             )}
         >
             <div className="container mx-auto px-4 flex items-center justify-between">
@@ -42,7 +42,7 @@ export function Navbar() {
                              Actually, 'text-brand' usually implies colored logo. */}
                         <Image src="/logo.svg" alt="GrindHub Logo" fill className="object-contain" />
                     </div>
-                    <span className={cn("text-xl font-bold uppercase tracking-tighter transition-colors",
+                    <span className={cn("text-xl font-bold uppercase tracking-tighter transition-colors font-heading",
                         scrolled || mobileMenuOpen ? "text-black-rich" : "text-black-rich"
                     )}>
                         GrindHub
@@ -94,7 +94,7 @@ export function Navbar() {
                             </Link>
                             <Link
                                 href="/register"
-                                className="bg-brand hover:bg-brand-600 text-white font-bold py-2.5 px-6 rounded-lg shadow-lg hover:shadow-brand/30 transition-all transform hover:-translate-y-0.5 text-sm uppercase tracking-wide"
+                                className="bg-brand hover:bg-brand-600 text-white font-bold py-2.5 px-6 rounded-full shadow-lg shadow-brand/20 hover:shadow-brand/40 transition-all transform hover:-translate-y-0.5 hover:scale-105 text-sm uppercase tracking-wide"
                             >
                                 Join Now
                             </Link>
@@ -180,7 +180,7 @@ export function Navbar() {
                             </Link>
                             <Link
                                 href="/register"
-                                className="bg-brand hover:bg-brand-600 text-white font-bold py-4 px-6 text-center rounded-lg shadow-md uppercase text-sm tracking-widest transition-all"
+                                className="bg-brand hover:bg-brand-600 text-white font-bold py-4 px-6 text-center rounded-full shadow-md shadow-brand/20 uppercase text-sm tracking-widest transition-all hover:scale-105"
                                 onClick={() => setMobileMenuOpen(false)}
                             >
                                 Join Now

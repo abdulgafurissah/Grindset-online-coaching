@@ -4,7 +4,7 @@ import { Instagram, Twitter, Linkedin, Mail } from "lucide-react";
 
 export function Footer() {
     return (
-        <footer className="bg-black-rich border-t border-white/5 py-12 md:py-16">
+        <footer className="bg-slate-900 rounded-t-[2.5rem] border-t border-white/5 py-12 md:py-16 mt-12 mx-2 md:mx-4 mb-4">
             <div className="container mx-auto px-4">
                 <div className="grid grid-cols-1 md:grid-cols-4 gap-12 mb-12">
                     {/* Brand Column */}
@@ -13,7 +13,7 @@ export function Footer() {
                             <div className="relative h-10 w-10">
                                 <Image src="/logo.svg" alt="GrindHub Logo" fill className="object-contain" />
                             </div>
-                            <span className="text-xl font-bold text-white uppercase tracking-tighter">GrindHub</span>
+                            <span className="text-xl font-bold font-heading text-white uppercase tracking-tighter">GrindHub</span>
                         </Link>
                         <p className="text-white/60 text-sm leading-relaxed mb-6">
                             The ultimate fusion of physical training and psychological conditioning. Unlock your true potential today.

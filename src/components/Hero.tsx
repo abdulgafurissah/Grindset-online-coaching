@@ -24,13 +24,13 @@ export function Hero() {
                                 href="https://calendly.com/online-coach968"
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                className="w-full sm:w-auto bg-brand hover:bg-brand-600 text-white font-bold py-4 px-10 rounded-lg shadow-lg hover:shadow-brand/30 transition-all transform hover:-translate-y-1 text-center"
+                                className="w-full sm:w-auto bg-brand hover:bg-brand-600 text-white font-bold py-4 px-10 rounded-full shadow-lg shadow-brand/20 hover:shadow-brand/40 transition-all transform hover:-translate-y-1 hover:scale-105 active:scale-95 text-center"
                             >
                                 Book Free Consultation
                             </a>
                             <Link
                                 href="/coaches"
-                                className="w-full sm:w-auto border border-black-rich/10 hover:border-brand hover:text-brand text-black-rich font-bold py-4 px-10 rounded-lg transition-all text-center"
+                                className="w-full sm:w-auto border-2 border-slate-200 hover:border-brand hover:text-brand text-black-rich font-bold py-4 px-10 rounded-full transition-all text-center hover:bg-brand/5"
                             >
                                 View Coaches
                             </Link>
@@ -38,7 +38,7 @@ export function Hero() {
                         <div className="flex flex-col sm:flex-row items-center lg:justify-start justify-center gap-4">
                             <Link
                                 href="/register"
-                                className="w-full sm:w-auto bg-brand hover:bg-brand-600 text-white font-bold py-4 px-10 rounded-lg shadow-lg hover:shadow-brand/30 transition-all transform hover:-translate-y-1 text-center"
+                                className="w-full sm:w-auto bg-black-rich hover:bg-slate-800 text-white font-bold py-4 px-10 rounded-full shadow-lg hover:shadow-xl transition-all transform hover:-translate-y-1 hover:scale-105 active:scale-95 text-center"
                             >
                                 Join now
                             </Link>
@@ -52,7 +52,7 @@ export function Hero() {
                 </div>
 
                 {/* Image */}
-                <div className="relative z-10 h-[500px] lg:h-[700px] w-full order-1 lg:order-2 rounded-2xl overflow-hidden shadow-2xl">
+                <div className="relative z-10 h-[500px] lg:h-[700px] w-full order-1 lg:order-2 rounded-[2.5rem] overflow-hidden shadow-2xl shadow-brand/10 border-8 border-white group">
                     <Image
                         src="https://images.unsplash.com/photo-1534438327276-14e5300c3a48?q=80&w=2070&auto=format&fit=crop"
                         alt="Elite Fitness Model"
@@ -64,8 +64,8 @@ export function Hero() {
             </div>
 
             {/* Background Elements */}
-            <div className="absolute top-0 right-0 -mr-20 -mt-20 w-96 h-96 bg-brand/5 rounded-full blur-3xl z-0" />
-            <div className="absolute bottom-0 left-0 -ml-20 -mb-20 w-96 h-96 bg-blue-500/5 rounded-full blur-3xl z-0" />
+            <div className="absolute top-0 right-0 -mr-20 -mt-20 w-[30rem] h-[30rem] bg-brand/10 rounded-full blur-3xl z-0" />
+            <div className="absolute bottom-0 left-0 -ml-20 -mb-20 w-[30rem] h-[30rem] bg-pink-400/10 rounded-full blur-3xl z-0" />
         </section>
     );
 }
