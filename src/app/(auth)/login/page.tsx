@@ -45,9 +45,9 @@ export default function LoginPage() {
                     <Link href="/" className="flex items-center gap-2">
                         {/* Assuming logo has white text version or we need filter */}
                         <div className="relative h-10 w-10">
-                            <Image src="/logo.svg" alt="Grindset Logo" fill className="object-contain" />
+                            <Image src="/logo.svg" alt="GrindHub Logo" fill className="object-contain" />
                         </div>
-                        <span className="font-bold uppercase tracking-tighter">Grindset</span>
+                        <span className="font-bold uppercase tracking-tighter">GrindHub</span>
                     </Link>
                 </div>
                 <div className="relative z-20 mt-auto">
@@ -68,7 +68,7 @@ export default function LoginPage() {
                     <div className="flex flex-col items-center gap-2 mb-2 lg:hidden">
                         <Link href="/">
                             <div className="relative h-12 w-12">
-                                <Image src="/logo.svg" alt="Grindset Logo" fill className="object-contain" />
+                                <Image src="/logo.svg" alt="GrindHub Logo" fill className="object-contain" />
                             </div>
                         </Link>
                     </div>

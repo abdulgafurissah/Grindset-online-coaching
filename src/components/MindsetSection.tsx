@@ -18,7 +18,7 @@ export function MindsetSection() {
                         </h2>
                         <p className="text-white/90 text-lg leading-relaxed mb-8 font-medium">
                             Most fitness programs fail because they ignore the most critical muscle: your brain.
-                            At Grindset, we integrate psychological conditioning directly into your physical training.
+                            At GrindHub, we integrate psychological conditioning directly into your physical training.
                         </p>
 
                         <div className="grid gap-6">

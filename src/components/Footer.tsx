@@ -11,9 +11,9 @@ export function Footer() {
                     <div className="md:col-span-1">
                         <Link href="/" className="flex items-center gap-2 mb-6">
                             <div className="relative h-10 w-10">
-                                <Image src="/logo.svg" alt="Grindset Logo" fill className="object-contain" />
+                                <Image src="/logo.svg" alt="GrindHub Logo" fill className="object-contain" />
                             </div>
-                            <span className="text-xl font-bold text-white uppercase tracking-tighter">Grindset</span>
+                            <span className="text-xl font-bold text-white uppercase tracking-tighter">GrindHub</span>
                         </Link>
                         <p className="text-white/60 text-sm leading-relaxed mb-6">
                             The ultimate fusion of physical training and psychological conditioning. Unlock your true potential today.
@@ -56,7 +56,7 @@ export function Footer() {
                         <ul className="space-y-3">
                             <li className="flex items-center gap-2 text-white/60 text-sm">
                                 <Mail className="w-4 h-4 text-brand" />
-                                support@grindset.com
+                                support@grindhub.com
                             </li>
                             <li className="text-white/60 text-sm">
                                 Dubai, UAE
@@ -67,7 +67,7 @@ export function Footer() {
 
                 <div className="border-t border-white/5 pt-8 flex flex-col md:flex-row items-center justify-between gap-4">
                     <p className="text-white/40 text-xs">
-                        &copy; {new Date().getFullYear()} Grindset Online Coaching. All rights reserved.
+                        &copy; {new Date().getFullYear()} GrindHub Online Coaching. All rights reserved.
                     </p>
                     <p className="text-white/40 text-xs text-center md:text-right">
                         Forged in Iron & Will.

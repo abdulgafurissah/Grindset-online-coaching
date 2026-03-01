@@ -29,7 +29,7 @@ export function Features() {
             <div className="container mx-auto px-4">
                 <div className="text-center mb-16">
                     <h2 className="text-3xl md:text-5xl font-bold text-black-rich tracking-tight mb-4">
-                        Why choose <span className="text-brand">Grindset</span>
+                        Why choose <span className="text-brand">GrindHub</span>
                     </h2>
                     <div className="h-1 w-20 bg-brand mx-auto rounded-full" />
                 </div>

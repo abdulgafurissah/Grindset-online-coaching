@@ -84,9 +84,9 @@ export function Sidebar({ className, onClose }: SidebarProps) {
             <div className="p-6 flex items-center justify-between border-b border-slate-100">
                 <Link href="/dashboard" className="flex items-center gap-2" onClick={onClose}>
                     <div className="relative h-8 w-8 md:h-10 md:w-10">
-                        <Image src="/logo.svg" alt="Grindset Logo" fill className="object-contain" />
+                        <Image src="/logo.svg" alt="GrindHub Logo" fill className="object-contain" />
                     </div>
-                    <span className="text-lg md:text-xl font-bold text-black-rich tracking-widest">GRINDSET</span>
+                    <span className="text-lg md:text-xl font-bold text-black-rich tracking-widest">GRINDHUB</span>
                 </Link>
                 {onClose && (
                     <button onClick={onClose} className="md:hidden text-slate-500 hover:text-black-rich">

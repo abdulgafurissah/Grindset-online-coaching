@@ -42,7 +42,7 @@ export default function Home() {
                             </div>
                             <h3 className="font-bold text-xl text-black-rich mb-1">Emma R.</h3>
                             <p className="text-brand text-sm font-bold uppercase tracking-wide">Overcame Anxiety & Got Fit</p>
-                            <p className="mt-4 text-black-rich/60 italic">"I never thought I could do it until I found Grindset. Truly life changing."</p>
+                            <p className="mt-4 text-black-rich/60 italic">"I never thought I could do it until I found GrindHub. Truly life changing."</p>
                         </div>
                     </div>
                 </div>

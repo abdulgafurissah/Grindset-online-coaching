@@ -59,7 +59,7 @@ export default function BillingSuccessPage() {
                 <>
                     <CheckCircle2 className="w-20 h-20 text-green-500 mb-6 mx-auto bg-green-50 rounded-full p-2" />
                     <h1 className="text-3xl font-black text-black-rich uppercase tracking-tight mb-2">Payment Successful!</h1>
-                    <p className="text-slate-500 mb-8">Welcome to the Grindset. Your premium plan is now active.</p>
+                    <p className="text-slate-500 mb-8">Welcome to the GrindHub. Your premium plan is now active.</p>
                     <Button
                         onClick={() => router.push("/dashboard/billing")}
                         className="bg-brand text-black-rich hover:bg-brand/90 font-bold uppercase w-full max-w-xs mx-auto"

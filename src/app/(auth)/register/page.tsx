@@ -45,15 +45,15 @@ export default function RegisterPage() {
                 <div className="relative z-20 flex items-center text-lg font-medium">
                     <Link href="/" className="flex items-center gap-2">
                         <div className="relative h-10 w-10">
-                            <Image src="/logo.svg" alt="Grindset Logo" fill className="object-contain" />
+                            <Image src="/logo.svg" alt="GrindHub Logo" fill className="object-contain" />
                         </div>
-                        <span className="font-bold uppercase tracking-tighter">Grindset</span>
+                        <span className="font-bold uppercase tracking-tighter">GrindHub</span>
                     </Link>
                 </div>
                 <div className="relative z-20 mt-auto">
                     <blockquote className="space-y-2">
                         <p className="text-lg">
-                            &ldquo;Joining Grindset was the best investment I&apos;ve made in myself. The comprehensive approach to health and performance is unmatched.&rdquo;
+                            &ldquo;Joining GrindHub was the best investment I&apos;ve made in myself. The comprehensive approach to health and performance is unmatched.&rdquo;
                         </p>
                         <footer className="text-sm font-bold text-brand">Marcus Johnson, Elite Member</footer>
                     </blockquote>
@@ -68,7 +68,7 @@ export default function RegisterPage() {
                     <div className="flex flex-col items-center gap-2 mb-2 lg:hidden">
                         <Link href="/">
                             <div className="relative h-12 w-12">
-                                <Image src="/logo.svg" alt="Grindset Logo" fill className="object-contain" />
+                                <Image src="/logo.svg" alt="GrindHub Logo" fill className="object-contain" />
                             </div>
                         </Link>
                     </div>

@@ -5,8 +5,8 @@ import { TawkChatInfo } from "@/components/TawkChatInfo";
 import "./globals.css";
 
 export const metadata: Metadata = {
-    title: "Grindset Online Coaching",
-    description: "Transform Your Mind & Body with Grindset Online Coaching",
+    title: "GrindHub Online Coaching",
+    description: "Transform Your Mind & Body with GrindHub Online Coaching",
     icons: {
         icon: "/logo.svg",
     },
