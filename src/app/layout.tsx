@@ -8,7 +8,7 @@ export const metadata: Metadata = {
     title: "GrindHub Online Coaching",
     description: "Transform Your Mind & Body with GrindHub Online Coaching",
     icons: {
-        icon: "/logo.svg",
+        icon: "/logo.jpg",
     },
 };
 

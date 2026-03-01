@@ -11,7 +11,7 @@ export function Footer() {
                     <div className="md:col-span-1">
                         <Link href="/" className="flex items-center gap-2 mb-6">
                             <div className="relative h-10 w-10">
-                                <Image src="/logo.svg" alt="GrindHub Logo" fill className="object-contain" />
+                                <Image src="/logo.jpg" alt="GrindHub Logo" fill className="object-contain" />
                             </div>
                             <span className="text-xl font-bold text-white uppercase tracking-tighter">GrindHub</span>
                         </Link>
