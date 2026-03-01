@@ -40,7 +40,7 @@ export function Navbar() {
                              The logo.svg is likely the one users provided. 
                              Let's add a subtle background just in case if safe. 
                              Actually, 'text-brand' usually implies colored logo. */}
-                        <Image src="/logo.jpg" alt="GrindHub Logo" fill className="object-contain" />
+                        <Image src="/logo.svg" alt="GrindHub Logo" fill className="object-contain" />
                     </div>
                     <span className={cn("text-xl font-bold uppercase tracking-tighter transition-colors",
                         scrolled || mobileMenuOpen ? "text-black-rich" : "text-black-rich"

@@ -37,7 +37,7 @@ export default function DashboardLayoutClient({
                     </button>
                     <Link href="/dashboard" className="flex items-center gap-2">
                         <div className="relative h-8 w-8">
-                            <Image src="/logo.jpg" alt="GrindHub Logo" fill className="object-contain" />
+                            <Image src="/logo.svg" alt="GrindHub Logo" fill className="object-contain" />
                         </div>
                         <span className="text-lg font-bold text-white tracking-widest">GRINDHUB</span>
                     </Link>
