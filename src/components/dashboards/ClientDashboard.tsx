@@ -2,7 +2,6 @@ import {
     Calendar,
     ArrowRight,
     Play,
-    MessageSquare,
     User,
     ShieldCheck
 } from "lucide-react";
@@ -181,9 +180,6 @@ export async function ClientDashboard({ user }: { user?: any }) {
                                             <p className="text-slate-400 text-sm">{coach.email}</p>
                                         </div>
                                     </div>
-                                    <Link href="/dashboard/messages" className="block w-full py-3 bg-brand text-black-rich text-center rounded-lg font-bold text-sm hover:bg-brand/90 transition-colors">
-                                        Message Coach
-                                    </Link>
                                 </div>
                             ) : (
                                 <div className="text-center py-4">

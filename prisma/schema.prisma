@@ -20,115 +20,110 @@ enum ApprovalStatus {
 }
 
 model User {
-  id            String    @id @default(cuid())
-  name          String?
-  email         String    @unique
-  emailVerified DateTime?
-  image         String?
-  password      String?
-  role          Role      @default(CLIENT)
+  id             String         @id @default(cuid())
+  name           String?
+  email          String         @unique
+  emailVerified  DateTime?
+  image          String?
+  password       String?
+  role           Role           @default(CLIENT)
   approvalStatus ApprovalStatus @default(PENDING)
-  accounts      Account[]
-  sessions      Session[]
-  profile       Profile?
-  
+  accounts       Account[]
+  sessions       Session[]
+  profile        Profile?
+
   // Create Coach-Client Relation
-  coachId       String?
-  coach         User?     @relation("CoachClients", fields: [coachId], references: [id])
-  clients       User[]    @relation("CoachClients")
+  coachId String?
+  coach   User?   @relation("CoachClients", fields: [coachId], references: [id])
+  clients User[]  @relation("CoachClients")
 
   // Admin fields
-  isActive      Boolean   @default(true)
-  
-  // Messaging
-  sentMessages     Message[] @relation("SentMessages")
-  receivedMessages Message[] @relation("ReceivedMessages")
-  
+  isActive Boolean @default(true)
+
   // Payment Relations
   clientPayments Payment[] @relation("ClientPayments")
   coachPayments  Payment[] @relation("CoachPayments")
-  
-  // Subscriptions
-  subscription  Subscription?
 
-  createdAt     DateTime  @default(now())
-  updatedAt     DateTime  @updatedAt
+  // Subscriptions
+  subscription Subscription?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   createdPrograms Program[] @relation("CreatedPrograms")
 
   // Consultations
   consultationsAsCoach  Consultation[] @relation("CoachConsultations")
   consultationsAsClient Consultation[] @relation("ClientConsultations")
-  
-  progress      Progress[]
-  assignedPrograms Program[] @relation("AssignedPrograms")
+
+  progress         Progress[]
+  assignedPrograms Program[]  @relation("AssignedPrograms")
 }
 
-
 model Profile {
-  id     String @id @default(cuid())
+  id     String  @id @default(cuid())
   bio    String?
   age    Int?
   height Float?
   weight Float?
   goals  String?
-  
+
   // Health Data
-  medicalConditions String?
-  allergies        String?
-  lifestyleHabits  String?
+  medicalConditions     String?
+  allergies             String?
+  lifestyleHabits       String?
   anyRelevantHealthInfo String?
-  
+
   // Detailed Personal Info
-  gender        String?
-  dob           DateTime?
-  nationality   String?
-  timezone      String?
-  phoneNumber   String?
-  whatsappNumber String?
+  gender           String?
+  dob              DateTime?
+  nationality      String?
+  timezone         String?
+  phoneNumber      String?
+  whatsappNumber   String?
   emergencyContact String?
-  
+
   // Professional Info
   specializations String[]
   experienceYears Int?
   certifications  String[] // URLs to docs
   languages       String[]
-  
+
   // Coaching Details
-  coachingTypes   String[] // "1-on-1", "Group", etc.
-  pricingModel    String?  // "Monthly", "Per Session"
-  priceAmount     Float?
-  availability    Json?
-  
+  coachingTypes String[] // "1-on-1", "Group", etc.
+  pricingModel  String? // "Monthly", "Per Session"
+  priceAmount   Float?
+  availability  Json?
+
   // Social & Legal
-  socialLinks     Json?
+  socialLinks      Json?
   verificationDocs String[] // URLs
-  idDocument      String?   // URL
-  
+  idDocument       String? // URL
+
   // Old fields mapped or kept for compatibility
-  specialty     String?  // Keep for now, migrate to specializations
-  qualification String?  // Keep for now
-  rating        Float?   @default(5.0)
-  experience    String?  // Keep for now
+  specialty      String? // Keep for now, migrate to specializations
+  qualification  String? // Keep for now
+  rating         Float?  @default(5.0)
+  experience     String? // Keep for now
   commissionRate Float   @default(0.8) // 80% to coach by default
-  
+
   userId String @unique
   user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 model Account {
-  id                 String  @id @default(cuid())
-  userId             String
-  type               String
-  provider           String
-  providerAccountId  String
-  refresh_token      String?
-  access_token       String?
-  expires_at         Int?
-  token_type         String?
-  scope              String?
-  id_token           String?
-  session_state      String?
+  id                String  @id @default(cuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String?
+  access_token      String?
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String?
+  session_state     String?
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
@@ -143,22 +138,11 @@ model Session {
   user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
-model Message {
-  id        String   @id @default(cuid())
-  content   String
-  senderId  String
-  sender    User     @relation("SentMessages", fields: [senderId], references: [id], onDelete: Cascade)
-  receiverId String
-  receiver  User     @relation("ReceivedMessages", fields: [receiverId], references: [id], onDelete: Cascade)
-  createdAt DateTime @default(now())
-  read      Boolean  @default(false)
-}
-
 model Subscription {
-  id            String   @id @default(cuid())
-  userId        String   @unique
-  user          User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  paypalSubscriptionId String   @unique
+  id                   String       @id @default(cuid())
+  userId               String       @unique
+  user                 User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  paypalSubscriptionId String       @unique
   status               String
   planId               String
   plan                 PaymentPlan? @relation(fields: [planId], references: [id])
@@ -166,46 +150,46 @@ model Subscription {
 }
 
 model PaymentPlan {
-  id               String   @id @default(cuid())
-  name             String
-  price            Float
-  interval         String   // e.g. "month", "year"
-  category         String   @default("General")
-  paymentLink      String?  // The static paypal payment link
-  features         Json
-  isActive         Boolean  @default(true)
-  promoPercentage  Float    @default(0) // 0 means no promo, 50 means 50% off
-  createdAt        DateTime @default(now())
-  updatedAt        DateTime @updatedAt
-  subscriptions    Subscription[]
+  id              String         @id @default(cuid())
+  name            String
+  price           Float
+  interval        String // e.g. "month", "year"
+  category        String         @default("General")
+  paymentLink     String? // The static paypal payment link
+  features        Json
+  isActive        Boolean        @default(true)
+  promoPercentage Float          @default(0) // 0 means no promo, 50 means 50% off
+  createdAt       DateTime       @default(now())
+  updatedAt       DateTime       @updatedAt
+  subscriptions   Subscription[]
 }
 
 model Application {
   id        String   @id @default(cuid())
   name      String
   email     String
-  type      String   // CLIENT, COACH
+  type      String // CLIENT, COACH
   status    String   @default("PENDING") // PENDING, APPROVED, REJECTED
-  details   Json?    // e.g., experience, goals
+  details   Json? // e.g., experience, goals
   createdAt DateTime @default(now())
 }
 
 model Payment {
-  id            String   @id @default(cuid())
-  amount        Float
-  status        String   @default("COMPLETED") // COMPLETED, PENDING, REFUNDED
-  
-  userId        String
-  user          User     @relation("ClientPayments", fields: [userId], references: [id])
-  
-  coachId       String?
-  coach         User?    @relation("CoachPayments", fields: [coachId], references: [id])
-  
+  id     String @id @default(cuid())
+  amount Float
+  status String @default("COMPLETED") // COMPLETED, PENDING, REFUNDED
+
+  userId String
+  user   User   @relation("ClientPayments", fields: [userId], references: [id])
+
+  coachId String?
+  coach   User?   @relation("CoachPayments", fields: [coachId], references: [id])
+
   coachShare    Float
   platformShare Float
-  isPaidOut     Boolean  @default(false)
-  
-  createdAt     DateTime @default(now())
+  isPaidOut     Boolean @default(false)
+
+  createdAt DateTime @default(now())
 }
 
 model Program {
@@ -222,22 +206,21 @@ model Program {
   users       User[]   @relation("AssignedPrograms")
 }
 
-
 model Consultation {
-  id          String   @id @default(cuid())
-  
-  clientId    String
-  client      User     @relation("ClientConsultations", fields: [clientId], references: [id], onDelete: Cascade)
-  
-  coachId     String
-  coach       User     @relation("CoachConsultations", fields: [coachId], references: [id], onDelete: Cascade)
-  
+  id String @id @default(cuid())
+
+  clientId String
+  client   User   @relation("ClientConsultations", fields: [clientId], references: [id], onDelete: Cascade)
+
+  coachId String
+  coach   User   @relation("CoachConsultations", fields: [coachId], references: [id], onDelete: Cascade)
+
   status      String   @default("PENDING") // PENDING, APPROVED, REJECTED, COMPLETED
   requestedAt DateTime // Date suggested by client
   message     String?
-  
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 model Progress {
@@ -249,5 +232,3 @@ model Progress {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
-
-

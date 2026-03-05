@@ -9,7 +9,6 @@ import {
     LayoutDashboard,
     Dumbbell,
     Utensils,
-    MessageSquare,
     TrendingUp,
     Settings,
     LogOut,
@@ -22,7 +21,6 @@ import {
 
 const commonLinks = [
     { href: "/dashboard", label: "Overview", icon: LayoutDashboard },
-    { href: "/dashboard/messages", label: "Messages", icon: MessageSquare },
     { href: "/dashboard/settings", label: "Settings", icon: Settings },
 ];
 
@@ -62,14 +60,12 @@ export function Sidebar({ className, onClose }: SidebarProps) {
         links = [
             { href: "/dashboard", label: "Overview", icon: LayoutDashboard },
             ...coachLinks,
-            { href: "/dashboard/messages", label: "Messages", icon: MessageSquare },
             { href: "/dashboard/settings", label: "Settings", icon: Settings },
         ];
     } else {
         // CLIENT
         links = [
             { href: "/dashboard", label: "Overview", icon: LayoutDashboard },
-            { href: "/dashboard/messages", label: "Messages", icon: MessageSquare },
             { href: "/dashboard/settings", label: "Settings", icon: Settings },
         ];
     }
