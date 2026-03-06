@@ -72,13 +72,15 @@ export async function authenticate(prevState: string | undefined, formData: Form
         await signIn("credentials", formData);
     } catch (error) {
         if (error instanceof AuthError) {
+            console.error("AuthError caught:", error.type, error.message);
             switch (error.type) {
                 case "CredentialsSignin":
                     return "Invalid credentials.";
                 default:
-                    return "Something went wrong.";
+                    return `AuthError: ${error.type} - ${error.message}`;
             }
         }
+        // Essential: must throw for Next.js redirects to work!
         throw error;
     }
 }
