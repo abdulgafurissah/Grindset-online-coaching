@@ -11,6 +11,9 @@ const CreateCoachSchema = z.object({
     email: z.string().email("Invalid email"),
     password: z.string().min(6, "Password must be at least 6 characters"),
     specialty: z.string().optional(),
+    bio: z.string().optional(),
+    shortBio: z.string().optional(),
+    image: z.string().url("Must be a valid URL").optional().or(z.literal('')),
     commissionRate: z.number().min(0).max(1).optional(),
 });
 
@@ -20,6 +23,9 @@ export async function createCoach(prevState: any, formData: FormData) {
         email: formData.get("email"),
         password: formData.get("password"),
         specialty: formData.get("specialty"),
+        bio: formData.get("bio"),
+        shortBio: formData.get("shortBio"),
+        image: formData.get("image"),
         commissionRate: formData.get("commissionRate") ? parseFloat(formData.get("commissionRate") as string) : 0.8,
     });
 
@@ -27,7 +33,7 @@ export async function createCoach(prevState: any, formData: FormData) {
         return { error: validatedFields.error.flatten().fieldErrors };
     }
 
-    const { name, email, password, specialty, commissionRate } = validatedFields.data;
+    const { name, email, password, specialty, bio, shortBio, image, commissionRate } = validatedFields.data;
 
     try {
         const existingUser = await prisma.user.findUnique({ where: { email } });
@@ -41,13 +47,14 @@ export async function createCoach(prevState: any, formData: FormData) {
                 email,
                 password: hashedPassword,
                 role: "COACH",
+                image: image || null,
                 approvalStatus: "APPROVED", // Auto-approve admin created coaches
                 profile: {
                     create: {
                         specialty,
                         commissionRate,
-                        bio: "New Coach",
-                        qualification: "Pending Verification",
+                        bio: bio || "No bio provided.",
+                        qualification: shortBio || "Pending Verification",
                         rating: 5.0
                     }
                 }

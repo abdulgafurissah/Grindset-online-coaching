@@ -68,6 +68,12 @@ export default function AddCoachPage() {
                             <Input id="password" name="password" type="password" required minLength={6} placeholder="••••••••" />
                         </div>
 
+                        <div className="grid gap-2">
+                            <Label htmlFor="image">Profile Image URL</Label>
+                            <Input id="image" name="image" type="url" placeholder="https://example.com/avatar.jpg" />
+                            <p className="text-xs text-slate-400">Provide a direct link to the coach's image.</p>
+                        </div>
+
                         <div className="grid md:grid-cols-2 gap-4">
                             <div className="grid gap-2">
                                 <Label htmlFor="specialty">Specialty</Label>
@@ -78,6 +84,21 @@ export default function AddCoachPage() {
                                 <Input id="commissionRate" name="commissionRate" type="number" step="0.01" min="0" max="1" defaultValue="0.8" />
                                 <p className="text-xs text-slate-400">0.8 = 80% to Coach</p>
                             </div>
+                        </div>
+
+                        <div className="grid gap-2">
+                            <Label htmlFor="shortBio">Short Bio (Headline)</Label>
+                            <Input id="shortBio" name="shortBio" placeholder="Expert Strength & Conditioning Coach" />
+                        </div>
+
+                        <div className="grid gap-2">
+                            <Label htmlFor="bio">Full Biography</Label>
+                            <textarea
+                                id="bio"
+                                name="bio"
+                                className="flex min-h-[120px] w-full rounded-md border border-slate-200 bg-white px-3 py-2 text-sm ring-offset-white placeholder:text-slate-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+                                placeholder="Describe the coach's background, philosophy, and experience..."
+                            />
                         </div>
                     </div>
 
