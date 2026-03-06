@@ -56,15 +56,15 @@ export default function ConsultationsTable({ consultations }: { consultations: C
                                 <td className="px-6 py-4">
                                     <div className="flex items-center gap-3">
                                         <div className="h-9 w-9 rounded-full bg-slate-100 border border-slate-200 flex items-center justify-center text-slate-600 font-bold overflow-hidden">
-                                            {c.client.image ? (
+                                            {c.client?.image ? (
                                                 <img src={c.client.image} alt="Avatar" className="w-full h-full object-cover" />
                                             ) : (
-                                                c.client.name?.[0] || c.client.email[0].toUpperCase()
+                                                c.client?.name?.[0] || c.client?.email?.[0]?.toUpperCase()
                                             )}
                                         </div>
                                         <div>
-                                            <div className="font-bold text-black-rich">{c.client.name || "Client"}</div>
-                                            <div className="text-slate-400 text-xs">{c.client.email}</div>
+                                            <div className="font-bold text-black-rich">{c.client?.name || "Client"}</div>
+                                            <div className="text-slate-400 text-xs">{c.client?.email}</div>
                                         </div>
                                     </div>
                                 </td>

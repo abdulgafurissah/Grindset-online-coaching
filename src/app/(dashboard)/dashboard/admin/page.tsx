@@ -28,8 +28,8 @@ export default async function AdminPage() {
     if (!stats) return <div className="p-8 text-black-rich">Access Denied</div>;
 
     const items = [
-        { title: "Total Revenue", value: `$${stats.revenue.toLocaleString()}`, icon: DollarSign, color: "text-green-600 bg-green-100" },
-        { title: "Active Users", value: stats.userCount, icon: Users, color: "text-blue-600 bg-blue-100" },
+        { title: "Total Revenue", value: `$${(stats.revenue || 0).toLocaleString()}`, icon: DollarSign, color: "text-green-600 bg-green-100" },
+        { title: "Active Users", value: stats.userCount || 0, icon: Users, color: "text-blue-600 bg-blue-100" },
         { title: "Active Subscriptions", value: stats.activeSubs, icon: CheckCircle, color: "text-brand bg-brand/10" },
         { title: "Pending Applications", value: stats.pendingApps, icon: Clock, color: "text-yellow-600 bg-yellow-100" },
     ];
@@ -111,11 +111,10 @@ export default async function AdminPage() {
                         <div className="bg-white border border-slate-200 rounded-xl shadow-sm p-6">
                             <h2 className="text-xl font-bold text-black-rich mb-4">Revenue by Coach</h2>
                             <div className="space-y-4">
-                                {revenuePerCoach.map((coach: any, idx: number) => (
-                                    <div key={idx} className="flex justify-between items-center pb-4 border-b border-slate-100 last:border-0 last:pb-0">
-                                        <div className="font-medium text-black-rich">{coach.name}</div>
-                                        <div className="font-bold text-green-600">${coach.amount.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</div>
-                                    </div>
+                                <div key={idx} className="flex justify-between items-center pb-4 border-b border-slate-100 last:border-0 last:pb-0">
+                                    <div className="font-medium text-black-rich">{coach.name}</div>
+                                    <div className="font-bold text-green-600">${(coach.amount || 0).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</div>
+                                </div>
                                 ))}
                                 {revenuePerCoach.length === 0 && <div className="text-slate-500 text-sm">No coach revenue data.</div>}
                             </div>
@@ -123,11 +122,10 @@ export default async function AdminPage() {
                         <div className="bg-white border border-slate-200 rounded-xl shadow-sm p-6">
                             <h2 className="text-xl font-bold text-black-rich mb-4">Revenue by Program</h2>
                             <div className="space-y-4">
-                                {revenuePerProgram.map((prog: any, idx: number) => (
-                                    <div key={idx} className="flex justify-between items-center pb-4 border-b border-slate-100 last:border-0 last:pb-0">
-                                        <div className="font-medium text-black-rich">{prog.name}</div>
-                                        <div className="font-bold text-green-600">${prog.amount.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</div>
-                                    </div>
+                                <div key={idx} className="flex justify-between items-center pb-4 border-b border-slate-100 last:border-0 last:pb-0">
+                                    <div className="font-medium text-black-rich">{prog.name}</div>
+                                    <div className="font-bold text-green-600">${(prog.amount || 0).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</div>
+                                </div>
                                 ))}
                                 {revenuePerProgram.length === 0 && <div className="text-slate-500 text-sm">No program revenue data.</div>}
                             </div>

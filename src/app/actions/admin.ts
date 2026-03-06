@@ -39,13 +39,16 @@ export async function getAdminConsultations() {
     if (!session?.user?.id || (session.user as any).role !== "ADMIN") return [];
 
     try {
-        return await prisma.consultation.findMany({
+        const consultations = await prisma.consultation.findMany({
             include: {
                 client: { select: { name: true, email: true, image: true } },
                 coach: { select: { name: true, email: true } },
             },
             orderBy: { requestedAt: "asc" }
         });
+
+        // Filter out orphaned consultations where client or coach no longer exists
+        return consultations.filter(c => c.client && c.coach);
     } catch (error) {
         console.error("Failed to fetch admin consultations:", error);
         return [];
