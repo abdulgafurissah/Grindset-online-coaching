@@ -1,35 +1,104 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { createCoach } from "@/app/actions/admin-coach";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Loader2, ArrowLeft } from "lucide-react";
+import { Loader2, ArrowLeft, Upload, X, ImageIcon } from "lucide-react";
 import Link from "next/link";
 import { toast } from "sonner";
+import Image from "next/image";
 
 export default function AddCoachPage() {
     const router = useRouter();
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
 
+    // Image upload state
+    const [imageFile, setImageFile] = useState<File | null>(null);
+    const [imagePreview, setImagePreview] = useState<string | null>(null);
+    const fileInputRef = useRef<HTMLInputElement>(null);
+
+    const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const file = e.target.files?.[0];
+        if (file) {
+            if (file.size > 5 * 1024 * 1024) {
+                toast.error("Image size must be less than 5MB");
+                return;
+            }
+            setImageFile(file);
+            const reader = new FileReader();
+            reader.onloadend = () => {
+                setImagePreview(reader.result as string);
+            };
+            reader.readAsDataURL(file);
+        }
+    };
+
+    const removeImage = () => {
+        setImageFile(null);
+        setImagePreview(null);
+        if (fileInputRef.current) {
+            fileInputRef.current.value = "";
+        }
+    };
+
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         setLoading(true);
         setError(null);
 
-        const formData = new FormData(e.currentTarget);
-        const result = await createCoach(null, formData);
+        try {
+            const formData = new FormData(e.currentTarget);
+            let imageUrl = "";
 
-        if (result?.error) {
-            setError(typeof result.error === "string" ? result.error : "Failed to create coach");
+            // 1. Upload image if selected
+            if (imageFile) {
+                const uploadRes = await fetch("/api/upload", {
+                    method: "POST",
+                    body: JSON.stringify({
+                        filename: imageFile.name,
+                        contentType: imageFile.type,
+                    }),
+                });
+
+                if (!uploadRes.ok) throw new Error("Failed to get upload URL");
+
+                const { uploadUrl, fileUrl } = await uploadRes.json();
+
+                // Upload to R2
+                const putRes = await fetch(uploadUrl, {
+                    method: "PUT",
+                    body: imageFile,
+                    headers: {
+                        "Content-Type": imageFile.type,
+                    },
+                });
+
+                if (!putRes.ok) throw new Error("Failed to upload image to storage");
+                imageUrl = fileUrl;
+            }
+
+            // 2. Add imageUrl to formData
+            formData.set("image", imageUrl);
+
+            // 3. Create coach
+            const result = await createCoach(null, formData);
+
+            if (result?.error) {
+                setError(typeof result.error === "string" ? result.error : "Failed to create coach");
+                setLoading(false);
+            } else {
+                toast.success("Coach created successfully");
+                router.push("/dashboard/admin/coaches");
+                router.refresh();
+            }
+        } catch (err: any) {
+            console.error(err);
+            setError(err.message || "An unexpected error occurred");
             setLoading(false);
-        } else {
-            toast.success("Coach created successfully");
-            router.push("/dashboard/admin/coaches");
-            router.refresh();
         }
     };
 
@@ -53,25 +122,73 @@ export default function AddCoachPage() {
                     )}
 
                     <div className="space-y-4">
+                        {/* Profile Image Upload */}
                         <div className="grid gap-2">
-                            <Label htmlFor="name">Full Name</Label>
-                            <Input id="name" name="name" required placeholder="John Doe" />
+                            <Label>Profile Image</Label>
+                            <div
+                                className={cn(
+                                    "relative h-48 w-full border-2 border-dashed rounded-xl flex flex-col items-center justify-center transition-all overflow-hidden",
+                                    imagePreview ? "border-brand" : "border-slate-200 hover:border-brand/50 bg-slate-50"
+                                )}
+                            >
+                                {imagePreview ? (
+                                    <>
+                                        <Image
+                                            src={imagePreview}
+                                            alt="Preview"
+                                            fill
+                                            className="object-cover"
+                                        />
+                                        <div className="absolute inset-0 bg-black/40 opacity-0 hover:opacity-100 transition-opacity flex items-center justify-center">
+                                            <Button
+                                                type="button"
+                                                variant="destructive"
+                                                size="sm"
+                                                onClick={removeImage}
+                                                className="h-8 w-8 p-0 rounded-full"
+                                            >
+                                                <X className="h-4 w-4" />
+                                            </Button>
+                                        </div>
+                                    </>
+                                ) : (
+                                    <div
+                                        className="cursor-pointer flex flex-col items-center gap-2 p-4 w-full h-full justify-center"
+                                        onClick={() => fileInputRef.current?.click()}
+                                    >
+                                        <div className="p-3 bg-white rounded-full shadow-sm border border-slate-100 text-slate-400">
+                                            <Upload className="h-6 w-6" />
+                                        </div>
+                                        <div className="text-center">
+                                            <p className="text-sm font-bold text-black-rich">Click to upload photo</p>
+                                            <p className="text-xs text-slate-400 mt-1">PNG, JPG or WebP (Max 5MB)</p>
+                                        </div>
+                                    </div>
+                                )}
+                                <input
+                                    type="file"
+                                    ref={fileInputRef}
+                                    className="hidden"
+                                    accept="image/*"
+                                    onChange={handleImageChange}
+                                />
+                            </div>
                         </div>
 
-                        <div className="grid gap-2">
-                            <Label htmlFor="email">Email Address</Label>
-                            <Input id="email" name="email" type="email" required placeholder="john@example.com" />
+                        <div className="grid md:grid-cols-2 gap-4">
+                            <div className="grid gap-2">
+                                <Label htmlFor="name">Full Name</Label>
+                                <Input id="name" name="name" required placeholder="John Doe" />
+                            </div>
+                            <div className="grid gap-2">
+                                <Label htmlFor="email">Email Address</Label>
+                                <Input id="email" name="email" type="email" required placeholder="john@example.com" />
+                            </div>
                         </div>
 
                         <div className="grid gap-2">
                             <Label htmlFor="password">Password</Label>
                             <Input id="password" name="password" type="password" required minLength={6} placeholder="••••••••" />
-                        </div>
-
-                        <div className="grid gap-2">
-                            <Label htmlFor="image">Profile Image URL</Label>
-                            <Input id="image" name="image" type="url" placeholder="https://example.com/avatar.jpg" />
-                            <p className="text-xs text-slate-400">Provide a direct link to the coach's image.</p>
                         </div>
 
                         <div className="grid md:grid-cols-2 gap-4">
@@ -116,3 +233,9 @@ export default function AddCoachPage() {
         </div>
     );
 }
+
+// Helper for class name joining if not imported
+function cn(...inputs: any[]) {
+    return inputs.filter(Boolean).join(" ");
+}
+
