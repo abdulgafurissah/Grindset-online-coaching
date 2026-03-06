@@ -1,6 +1,8 @@
 import { getAdminStats, getApplications, getAdminUsers, getAvailableCoaches, getClients, getPrograms, getAdminConsultations } from "@/app/actions/admin";
 import { getAdminPayments, getSubscriptions, getPaymentPlans } from "@/app/actions/finance";
-import { CheckCircle, Clock, DollarSign, Users } from "lucide-react";
+import { CheckCircle, Clock, DollarSign, Users, Plus } from "lucide-react";
+import Link from "next/link";
+import { Button } from "@/components/ui/button";
 import ApplicationsTable from "./ApplicationsTable";
 import UsersTable from "./UsersTable";
 import ClientsTable from "./ClientsTable";
@@ -34,9 +36,16 @@ export default async function AdminPage() {
 
     return (
         <div className="p-6 md:p-8 max-w-7xl mx-auto space-y-8">
-            <div>
-                <h1 className="text-3xl font-bold text-black-rich mb-2 uppercase tracking-tight">Admin Dashboard</h1>
-                <p className="text-slate-500">Manage your platform, users, and revenue.</p>
+            <div className="flex items-center justify-between">
+                <div>
+                    <h1 className="text-3xl font-bold text-black-rich mb-2 uppercase tracking-tight">Admin Dashboard</h1>
+                    <p className="text-slate-500">Manage your platform, users, and revenue.</p>
+                </div>
+                <Link href="/dashboard/admin/coaches/new">
+                    <Button className="bg-brand text-black-rich font-bold hover:bg-brand/90">
+                        <Plus className="mr-2 h-4 w-4" /> Add Coach
+                    </Button>
+                </Link>
             </div>
 
             {/* Stats Grid */}
