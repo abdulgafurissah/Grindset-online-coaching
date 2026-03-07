@@ -48,7 +48,7 @@ export async function getAdminConsultations() {
         });
 
         // Filter out orphaned consultations where client or coach no longer exists
-        return consultations.filter(c => c.client && c.coach);
+        return consultations.filter((c: any) => c.client && c.coach);
     } catch (error) {
         console.error("Failed to fetch admin consultations:", error);
         return [];
