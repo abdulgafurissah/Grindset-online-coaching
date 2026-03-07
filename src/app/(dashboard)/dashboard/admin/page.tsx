@@ -111,10 +111,11 @@ export default async function AdminPage() {
                         <div className="bg-white border border-slate-200 rounded-xl shadow-sm p-6">
                             <h2 className="text-xl font-bold text-black-rich mb-4">Revenue by Coach</h2>
                             <div className="space-y-4">
-                                <div key={idx} className="flex justify-between items-center pb-4 border-b border-slate-100 last:border-0 last:pb-0">
-                                    <div className="font-medium text-black-rich">{coach.name}</div>
-                                    <div className="font-bold text-green-600">${(coach.amount || 0).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</div>
-                                </div>
+                                {revenuePerCoach.map((coach: any, idx: number) => (
+                                    <div key={idx} className="flex justify-between items-center pb-4 border-b border-slate-100 last:border-0 last:pb-0">
+                                        <div className="font-medium text-black-rich">{coach.name}</div>
+                                        <div className="font-bold text-green-600">${(coach.amount || 0).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</div>
+                                    </div>
                                 ))}
                                 {revenuePerCoach.length === 0 && <div className="text-slate-500 text-sm">No coach revenue data.</div>}
                             </div>
@@ -122,10 +123,11 @@ export default async function AdminPage() {
                         <div className="bg-white border border-slate-200 rounded-xl shadow-sm p-6">
                             <h2 className="text-xl font-bold text-black-rich mb-4">Revenue by Program</h2>
                             <div className="space-y-4">
-                                <div key={idx} className="flex justify-between items-center pb-4 border-b border-slate-100 last:border-0 last:pb-0">
-                                    <div className="font-medium text-black-rich">{prog.name}</div>
-                                    <div className="font-bold text-green-600">${(prog.amount || 0).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</div>
-                                </div>
+                                {revenuePerProgram.map((prog: any, idx: number) => (
+                                    <div key={idx} className="flex justify-between items-center pb-4 border-b border-slate-100 last:border-0 last:pb-0">
+                                        <div className="font-medium text-black-rich">{prog.name}</div>
+                                        <div className="font-bold text-green-600">${(prog.amount || 0).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</div>
+                                    </div>
                                 ))}
                                 {revenuePerProgram.length === 0 && <div className="text-slate-500 text-sm">No program revenue data.</div>}
                             </div>

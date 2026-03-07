@@ -56,6 +56,7 @@ export default function AddCoachPage() {
 
             // 1. Upload image if selected
             if (imageFile) {
+                console.log("Starting image upload for:", imageFile.name);
                 const uploadRes = await fetch("/api/upload", {
                     method: "POST",
                     body: JSON.stringify({
@@ -64,27 +65,45 @@ export default function AddCoachPage() {
                     }),
                 });
 
-                if (!uploadRes.ok) throw new Error("Failed to get upload URL");
+                if (!uploadRes.ok) {
+                    const errorText = await uploadRes.text();
+                    console.error("Upload API error:", errorText);
+                    throw new Error(`Failed to get upload URL: ${errorText}`);
+                }
 
                 const { uploadUrl, fileUrl } = await uploadRes.json();
+                console.log("Got upload URL, proceeding to R2 PUT");
 
                 // Upload to R2
-                const putRes = await fetch(uploadUrl, {
-                    method: "PUT",
-                    body: imageFile,
-                    headers: {
-                        "Content-Type": imageFile.type,
-                    },
-                });
+                try {
+                    const putRes = await fetch(uploadUrl, {
+                        method: "PUT",
+                        body: imageFile,
+                        headers: {
+                            "Content-Type": imageFile.type,
+                        },
+                    });
 
-                if (!putRes.ok) throw new Error("Failed to upload image to storage");
-                imageUrl = fileUrl;
+                    if (!putRes.ok) {
+                        console.error("R2 PUT error:", putRes.status, putRes.statusText);
+                        throw new Error(`Failed to upload image to storage (${putRes.status})`);
+                    }
+                    console.log("R2 upload successful");
+                    imageUrl = fileUrl;
+                } catch (fetchErr: any) {
+                    console.error("R2 fetch exception:", fetchErr);
+                    if (fetchErr.name === "TypeError" && fetchErr.message === "Failed to fetch") {
+                        throw new Error("Failed to fetch: This is likely a CORS issue. Please ensure your R2 bucket CORS policy allows PUT requests from this domain.");
+                    }
+                    throw fetchErr;
+                }
             }
 
             // 2. Add imageUrl to formData
             formData.set("image", imageUrl);
 
             // 3. Create coach
+            console.log("Creating coach record in database...");
             const result = await createCoach(null, formData);
 
             if (result?.error) {
@@ -96,7 +115,7 @@ export default function AddCoachPage() {
                 router.refresh();
             }
         } catch (err: any) {
-            console.error(err);
+            console.error("handleSubmit caught error:", err);
             setError(err.message || "An unexpected error occurred");
             setLoading(false);
         }
